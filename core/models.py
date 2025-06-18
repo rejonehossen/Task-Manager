@@ -54,7 +54,7 @@
 # Created by Rejone Hossen | Premium Task Manager | 2025
 # Created by Rejone Hossen | Premium Task Manager | 2025
 from django.db import models
-from django.contrib.auth.models import User
+# from django.contrib.auth.models import User
 from django.utils import timezone
 from django.contrib.auth.models import AbstractUser
 
@@ -97,20 +97,20 @@ PRIORITY_CHOICES = [
 class Category(models.Model):
     name = models.CharField(max_length=50)
     color = models.CharField(max_length=7, default='#3B82F6')
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
 
     def __str__(self):
         return self.name
 
 class Tag(models.Model):
     name = models.CharField(max_length=50)
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
 
     def __str__(self):
         return f"#{self.name}"
 
 class Task(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
     title = models.CharField(max_length=200)
     description = models.TextField(blank=True, null=True)
     priority = models.CharField(max_length=1, choices=PRIORITY_CHOICES, default='M')
@@ -146,11 +146,11 @@ class Task(models.Model):
         return f"{hours}h left"
 
 class SharedList(models.Model):
-    owner = models.ForeignKey(User, on_delete=models.CASCADE, related_name='shared_lists')
+    owner = models.ForeignKey(CustomUser, on_delete=models.CASCADE, related_name='shared_lists')
     title = models.CharField(max_length=200)
     description = models.TextField(blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
-    collaborators = models.ManyToManyField(User, related_name='collaborating_lists')
+    collaborators = models.ManyToManyField(CustomUser, related_name='collaborating_lists')
     tasks = models.ManyToManyField(Task, blank=True)
 
     def __str__(self):
