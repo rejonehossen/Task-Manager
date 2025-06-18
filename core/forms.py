@@ -4,6 +4,31 @@ from django import forms
 from .models import Task, Category, Tag, SharedList
 from django.contrib.auth.models import User
 
+from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
+from .models import CustomUser
+
+
+
+
+
+
+
+
+
+class CustomUserCreationForm(UserCreationForm):
+    email = forms.EmailField(required=True)
+    profile_picture = forms.ImageField(required=False)
+    bio = forms.CharField(widget=forms.Textarea(attrs={'rows': 3}), required=False)
+    theme = forms.ChoiceField(choices=[('light', 'Light'), ('dark', 'Dark')])
+
+    class Meta:
+        model = CustomUser
+        fields = ['username', 'email', 'password1', 'password2', 'profile_picture', 'bio', 'theme']
+
+class CustomLoginForm(AuthenticationForm):
+    username = forms.CharField(widget=forms.TextInput(attrs={'placeholder': 'Username'}))
+    password = forms.CharField(widget=forms.PasswordInput(attrs={'placeholder': 'Password'}))
+
 class TaskForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         user = kwargs.pop('user', None)

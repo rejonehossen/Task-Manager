@@ -1,8 +1,92 @@
 # Created by Rejone Hossen | Premium Task Manager | 2025
-
+# Created by Rejone Hossen | Premium Task Manager | 2025
+# Created by Rejone Hossen | Premium Task Manager | 2025
+# Created by Rejone Hossen | Premium Task Manager | 2025
+# Created by Rejone Hossen | Premium Task Manager | 2025
+# Created by Rejone Hossen | Premium Task Manager | 2025
+# Created by Rejone Hossen | Premium Task Manager | 2025
+# Created by Rejone Hossen | Premium Task Manager | 2025
+# Created by Rejone Hossen | Premium Task Manager | 2025
+# Created by Rejone Hossen | Premium Task Manager | 2025
+# Created by Rejone Hossen | Premium Task Manager | 2025
+# Created by Rejone Hossen | Premium Task Manager | 2025
+# Created by Rejone Hossen | Premium Task Manager | 2025
+# Created by Rejone Hossen | Premium Task Manager | 2025
+# Created by Rejone Hossen | Premium Task Manager | 2025
+# Created by Rejone Hossen | Premium Task Manager | 2025
+# Created by Rejone Hossen | Premium Task Manager | 2025
+# Created by Rejone Hossen | Premium Task Manager | 2025
+# Created by Rejone Hossen | Premium Task Manager | 2025
+# Created by Rejone Hossen | Premium Task Manager | 2025
+# Created by Rejone Hossen | Premium Task Manager | 2025
+# Created by Rejone Hossen | Premium Task Manager | 2025
+# Created by Rejone Hossen | Premium Task Manager | 2025
+# Created by Rejone Hossen | Premium Task Manager | 2025
+# Created by Rejone Hossen | Premium Task Manager | 2025
+# Created by Rejone Hossen | Premium Task Manager | 2025
+# Created by Rejone Hossen | Premium Task Manager | 2025
+# Created by Rejone Hossen | Premium Task Manager | 2025
+# Created by Rejone Hossen | Premium Task Manager | 2025
+# Created by Rejone Hossen | Premium Task Manager | 2025
+# Created by Rejone Hossen | Premium Task Manager | 2025
+# Created by Rejone Hossen | Premium Task Manager | 2025
+# Created by Rejone Hossen | Premium Task Manager | 2025
+# Created by Rejone Hossen | Premium Task Manager | 2025
+# Created by Rejone Hossen | Premium Task Manager | 2025
+# Created by Rejone Hossen | Premium Task Manager | 2025
+# Created by Rejone Hossen | Premium Task Manager | 2025
+# Created by Rejone Hossen | Premium Task Manager | 2025
+# Created by Rejone Hossen | Premium Task Manager | 2025
+# Created by Rejone Hossen | Premium Task Manager | 2025
+# Created by Rejone Hossen | Premium Task Manager | 2025
+# Created by Rejone Hossen | Premium Task Manager | 2025
+# Created by Rejone Hossen | Premium Task Manager | 2025
+# Created by Rejone Hossen | Premium Task Manager | 2025
+# Created by Rejone Hossen | Premium Task Manager | 2025
+# Created by Rejone Hossen | Premium Task Manager | 2025
+# Created by Rejone Hossen | Premium Task Manager | 2025
+# Created by Rejone Hossen | Premium Task Manager | 2025
+# Created by Rejone Hossen | Premium Task Manager | 2025
+# Created by Rejone Hossen | Premium Task Manager | 2025
+# Created by Rejone Hossen | Premium Task Manager | 2025
+# Created by Rejone Hossen | Premium Task Manager | 2025
+# Created by Rejone Hossen | Premium Task Manager | 2025
+# Created by Rejone Hossen | Premium Task Manager | 2025
+# Created by Rejone Hossen | Premium Task Manager | 2025
 from django.db import models
 from django.contrib.auth.models import User
 from django.utils import timezone
+from django.contrib.auth.models import AbstractUser
+
+
+
+def user_profile_image_path(instance, filename):
+    return f'profile_pics/user_{instance.id}/{filename}'
+
+class CustomUser(AbstractUser):
+    email = models.EmailField(unique=True)
+    profile_picture = models.ImageField(
+        upload_to=user_profile_image_path,
+        default='default_profile.png',
+        blank=True,
+        null=True
+    )
+    bio = models.TextField(blank=True, null=True)
+    theme = models.CharField(
+        max_length=10,
+        choices=[('light', 'Light'), ('dark', 'Dark')],
+        default='light'
+    )
+    is_premium = models.BooleanField(default=True)  # All users premium by default in your project
+    created_at = models.DateTimeField(default=timezone.now)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    USERNAME_FIELD = 'username'
+    REQUIRED_FIELDS = ['email']
+
+    def __str__(self):
+        return self.username
+
 
 PRIORITY_CHOICES = [
     ('H', 'High 🔥'),

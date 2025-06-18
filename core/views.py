@@ -10,6 +10,37 @@ from .forms import TaskForm, CategoryForm, TagForm, SharedListForm
 from django.contrib.auth.models import User
 from django.utils import timezone
 
+
+
+from django.views.generic import FormView
+from django.contrib.auth.views import LoginView, LogoutView
+from django.urls import reverse_lazy
+from django.contrib.auth import login
+from .forms import CustomUserCreationForm, CustomLoginForm
+
+class RegisterView(FormView):
+    template_name = 'registration/register.html'
+    form_class = CustomUserCreationForm
+    success_url = reverse_lazy('home')  # Redirect to task dashboard
+
+    def form_valid(self, form):
+        user = form.save()
+        login(self.request, user)
+        messages.success(self.request, "Registration successful. Welcome, " + user.username + "!")
+        return super().form_valid(form)
+
+class CustomLoginView(LoginView):
+    authentication_form = CustomLoginForm
+    template_name = 'registration/login.html'
+
+    def form_valid(self, form):
+        messages.success(self.request, f"Welcome back, {form.get_user().username}!")
+        return super().form_valid(form)
+
+class CustomLogoutView(LogoutView):
+    next_page = reverse_lazy('login')
+
+
 @login_required
 def task_list(request):
     tasks = Task.objects.filter(user=request.user).order_by('order', '-priority', 'due_date')

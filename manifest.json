@@ -1,0 +1,21 @@
+{
+  "name": "Premium Task Manager",
+  "short_name": "TaskMgr",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#1a365d",
+  "theme_color": "#1a365d",
+  "description": "A premium task management application by Rejone Hossen",
+  "icons": [
+    {
+      "src": "/static/images/logo-192x192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "/static/images/logo-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}
