@@ -1,0 +1,81 @@
+<!-- Created by Rejone Hossen | Premium Task Manager | 2025 -->
+{% load static %}
+<!DOCTYPE html>
+<html lang="en" class="{% if dark_mode %}dark{% endif %}">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Premium Task Manager | {% block title %}{% endblock %}</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+    <link rel="manifest" href="{% static 'manifest.json' %}">
+</head>
+<body class="bg-gray-100 dark:bg-gray-900 text-gray-800 dark:text-gray-200 transition-colors duration-200">
+    <nav class="bg-blue-600 dark:bg-gray-800 shadow-lg">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-16">
+                <div class="flex items-center">
+                    <div class="flex-shrink-0">
+                        <img class="h-8 w-8" src="{% static 'images/logo.png' %}" alt="Logo">
+                    </div>
+                    <div class="hidden md:block">
+                        <div class="ml-10 flex items-baseline space-x-4">
+                            <a href="{% url 'task_list' %}" class="px-3 py-2 rounded-md text-sm font-medium text-white bg-blue-700 dark:bg-gray-700">Tasks</a>
+                            <a href="{% url 'profile' %}" class="px-3 py-2 rounded-md text-sm font-medium text-white hover:bg-blue-700 dark:hover:bg-gray-700">Profile</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="hidden md:block">
+                    <div class="ml-4 flex items-center md:ml-6">
+                        <div class="mr-4 flex items-center">
+                            <span class="mr-2">Dark Mode</span>
+                            <label class="switch">
+                                <input type="checkbox" id="darkModeToggle" {% if dark_mode %}checked{% endif %}>
+                                <span class="slider round"></span>
+                            </label>
+                        </div>
+                        <div class="ml-3 relative">
+                            <div class="flex items-center">
+                                <span class="mr-2 text-white">Hello, {{ request.user.username }}</span>
+                                <a href="{% url 'logout' %}" class="px-3 py-1 rounded-md text-sm font-medium text-white bg-red-600 hover:bg-red-700">Logout</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container mx-auto px-4 py-8">
+        {% if messages %}
+            {% for message in messages %}
+                <div class="mb-4 p-4 rounded-md {% if message.tags == 'error' %}bg-red-100 text-red-800{% else %}bg-green-100 text-green-800{% endif %}">
+                    {{ message }}
+                </div>
+            {% endfor %}
+        {% endif %}
+        
+        {% block content %}{% endblock %}
+    </div>
+
+    <footer class="bg-gray-900 text-gray-300 text-center py-4 mt-8 shadow-xl border-t border-gray-700">
+        <p>© <span id="year"></span> Rejone Hossen. All rights reserved.</p>
+        <p class="text-sm">Created with 💻 and ☕ by Rejone Hossen</p>
+    </footer>
+
+    <script src="{% static 'js/main.js' %}"></script>
+    <script src="{% static 'js/dragdrop.js' %}"></script>
+    <script>
+        document.getElementById("year").textContent = new Date().getFullYear();
+    </script>
+    
+    {% block scripts %}{% endblock %}
+</body>
+</html>
+
+
+
+
+
+
