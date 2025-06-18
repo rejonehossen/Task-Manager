@@ -2,7 +2,7 @@
 
 from django import forms
 from .models import Task, Category, Tag, SharedList
-from django.contrib.auth.models import User
+# from django.contrib.auth.models import User
 
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from .models import CustomUser
@@ -63,7 +63,7 @@ class TagForm(forms.ModelForm):
 
 class SharedListForm(forms.ModelForm):
     collaborators = forms.ModelMultipleChoiceField(
-        queryset=User.objects.none(),
+        queryset=CustomUser.objects.none(),
         widget=forms.SelectMultiple(attrs={'class': 'select2'}),
         required=False
     )
@@ -72,7 +72,7 @@ class SharedListForm(forms.ModelForm):
         user = kwargs.pop('user', None)
         super(SharedListForm, self).__init__(*args, **kwargs)
         if user:
-            self.fields['collaborators'].queryset = User.objects.exclude(id=user.id)
+            self.fields['collaborators'].queryset = CustomUser.objects.exclude(id=user.id)
 
     class Meta:
         model = SharedList
