@@ -1,0 +1,73 @@
+<!-- Created by Rejone Hossen | Premium Task Manager | 2025 -->
+{% extends "base.html" %}
+
+{% block title %}{{ action }} Task{% endblock %}
+
+{% block content %}
+<div class="max-w-3xl mx-auto bg-white dark:bg-gray-800 rounded-lg shadow-md p-6">
+    <h1 class="text-2xl font-bold mb-6">{{ action }} Task</h1>
+    
+    <form method="post" class="space-y-4">
+        {% csrf_token %}
+        
+        <div>
+            <label class="block text-sm font-medium mb-1">Title</label>
+            {{ form.title }}
+            {% if form.title.errors %}
+                <p class="text-red-500 text-xs mt-1">{{ form.title.errors.as_text }}</p>
+            {% endif %}
+        </div>
+        
+        <div>
+            <label class="block text-sm font-medium mb-1">Description</label>
+            {{ form.description }}
+            {% if form.description.errors %}
+                <p class="text-red-500 text-xs mt-1">{{ form.description.errors.as_text }}</p>
+            {% endif %}
+        </div>
+        
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div>
+                <label class="block text-sm font-medium mb-1">Priority</label>
+                {{ form.priority }}
+                {% if form.priority.errors %}
+                    <p class="text-red-500 text-xs mt-1">{{ form.priority.errors.as_text }}</p>
+                {% endif %}
+            </div>
+            
+            <div>
+                <label class="block text-sm font-medium mb-1">Due Date</label>
+                {{ form.due_date }}
+                {% if form.due_date.errors %}
+                    <p class="text-red-500 text-xs mt-1">{{ form.due_date.errors.as_text }}</p>
+                {% endif %}
+            </div>
+            
+            <div>
+                <label class="block text-sm font-medium mb-1">Category</label>
+                {{ form.category }}
+                {% if form.category.errors %}
+                    <p class="text-red-500 text-xs mt-1">{{ form.category.errors.as_text }}</p>
+                {% endif %}
+            </div>
+        </div>
+        
+        <div>
+            <label class="block text-sm font-medium mb-1">Tags</label>
+            {{ form.tags }}
+            {% if form.tags.errors %}
+                <p class="text-red-500 text-xs mt-1">{{ form.tags.errors.as_text }}</p>
+            {% endif %}
+        </div>
+        
+        <div class="flex justify-end space-x-3 pt-4">
+            <a href="{% url 'task_list' %}" class="px-4 py-2 border border-gray-300 rounded-md text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700">
+                Cancel
+            </a>
+            <button type="submit" class="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700">
+                {{ action }}
+            </button>
+        </div>
+    </form>
+</div>
+{% endblock %}
