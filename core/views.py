@@ -68,7 +68,7 @@ def task_list(request):
         'categories': categories,
         'tags': tags,
         'shared_lists': shared_lists,
-        'priority_choices': Task.PRIORITY_CHOICES,
+        'priority_choices': Task.priority,
     }
     return render(request, 'tasks/task_list.html', context)
 

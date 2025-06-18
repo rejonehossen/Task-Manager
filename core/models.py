@@ -95,25 +95,25 @@ PRIORITY_CHOICES = [
 ]
 
 class Category(models.Model):
-    name = models.CharField(max_length=50)
-    color = models.CharField(max_length=7, default='#3B82F6')
+    name = models.CharField(max_length=50, null=True, blank=True)
+    color = models.CharField(max_length=7, default='#3B82F6', null=True, blank=True)
     user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
 
     def __str__(self):
         return self.name
 
 class Tag(models.Model):
-    name = models.CharField(max_length=50)
-    user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
+    name = models.CharField(max_length=50, null=True, blank=True)
+    user = models.ForeignKey(CustomUser, on_delete=models.CASCADE, null=True, blank=True)
 
     def __str__(self):
         return f"#{self.name}"
 
 class Task(models.Model):
-    user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
-    title = models.CharField(max_length=200)
+    user = models.ForeignKey(CustomUser, on_delete=models.CASCADE, null=True, blank=True)
+    title = models.CharField(max_length=200, null=True, blank=True)
     description = models.TextField(blank=True, null=True)
-    priority = models.CharField(max_length=1, choices=PRIORITY_CHOICES, default='M')
+    priority = models.CharField(max_length=1, choices=PRIORITY_CHOICES, default='M', null=True, blank=True)
     completed = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
