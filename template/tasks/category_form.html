@@ -1,0 +1,38 @@
+<!-- Created by Rejone Hossen -->
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
+<div class="form-container animate-fade-in">
+  <div class="form-card animate-slide-up">
+    <h2 class="form-title">{% if object %}Edit{% else %}Create{% endif %} Category</h2>
+    
+    <form method="post" class="premium-form">
+      {% csrf_token %}
+      
+      <div class="form-group animate-float-in" style="--delay: 0.1s">
+        <label for="{{ form.name.id_for_label }}">Category Name</label>
+        {{ form.name }}
+        <div class="form-icon">
+          <i class="fas fa-tag"></i>
+        </div>
+      </div>
+      
+      <div class="form-group animate-float-in" style="--delay: 0.2s">
+        <label for="{{ form.color.id_for_label }}">Color</label>
+        <div class="color-picker-container">
+          {{ form.color }}
+          <div class="color-preview" id="colorPreview"></div>
+        </div>
+      </div>
+      
+      <button type="submit" class="btn-premium animate-float-in" style="--delay: 0.3s">
+        <span class="btn-text">Save Category</span>
+        <span class="btn-icon">
+          <i class="fas fa-check-circle"></i>
+        </span>
+      </button>
+    </form>
+  </div>
+</div>
+{% endblock %}

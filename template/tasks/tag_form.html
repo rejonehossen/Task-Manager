@@ -1,0 +1,162 @@
+<!-- Created by Rejone Hossen -->
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
+<div class="form-container animate-fade-in">
+  <div class="form-card animate-slide-up">
+    <h2 class="form-title">{% if object %}Edit{% else %}Create{% endif %} Tag</h2>
+    
+    <form method="post" class="premium-form">
+      {% csrf_token %}
+      
+      <div class="form-group floating-label">
+        {{ form.name }}
+        <label for="{{ form.name.id_for_label }}">Tag Name</label>
+        <div class="form-icon">
+          <i class="fas fa-hashtag"></i>
+        </div>
+      </div>
+      
+      <button type="submit" class="btn-premium btn-gradient">
+        <span class="btn-text">Save Tag</span>
+        <span class="btn-icon">
+          <i class="fas fa-check-circle"></i>
+        </span>
+      </button>
+    </form>
+  </div>
+</div>
+{% endblock %}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<style>
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  /* Created by Rejone Hossen */
+
+/* Floating Label Effect */
+.floating-label {
+  position: relative;
+  margin-bottom: 2rem;
+}
+
+.floating-label input {
+  width: 100%;
+  padding: 1rem 1rem 1rem 3rem;
+  font-size: 1rem;
+  border: 2px solid rgba(255,255,255,0.1);
+  border-radius: 10px;
+  background: rgba(255,255,255,0.05);
+  color: #fff;
+  transition: all 0.3s ease;
+}
+
+.floating-label label {
+  position: absolute;
+  top: 1rem;
+  left: 3rem;
+  color: rgba(255,255,255,0.6);
+  transition: all 0.3s ease;
+  pointer-events: none;
+}
+
+.floating-label input:focus,
+.floating-label input:not(:placeholder-shown) {
+  border-color: rgba(255,255,255,0.3);
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(255,255,255,0.1);
+}
+
+.floating-label input:focus + label,
+.floating-label input:not(:placeholder-shown) + label {
+  top: -0.5rem;
+  left: 1rem;
+  font-size: 0.8rem;
+  background: linear-gradient(135deg, #6e8efb, #a777e3);
+  padding: 0 0.5rem;
+  border-radius: 10px;
+  color: white;
+}
+
+/* Gradient Button */
+.btn-gradient {
+  background: linear-gradient(135deg, #6e8efb, #a777e3);
+  background-size: 200% auto;
+  border: none;
+  color: white;
+  padding: 1rem 2rem;
+  border-radius: 50px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 15px rgba(106, 120, 251, 0.4);
+  overflow: hidden;
+  position: relative;
+}
+
+.btn-gradient:hover {
+  background-position: right center;
+  box-shadow: 0 6px 20px rgba(106, 120, 251, 0.6);
+  transform: translateY(-2px);
+}
+
+.btn-gradient:active {
+  transform: translateY(0);
+}
+</style>

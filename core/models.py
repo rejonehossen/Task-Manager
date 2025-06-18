@@ -100,7 +100,8 @@ class Category(models.Model):
     user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
 
     def __str__(self):
-        return self.name
+        return self.name or "Unnamed Category"
+
 
 class Tag(models.Model):
     name = models.CharField(max_length=50, null=True, blank=True)
@@ -113,7 +114,7 @@ class Task(models.Model):
     user = models.ForeignKey(CustomUser, on_delete=models.CASCADE, null=True, blank=True)
     title = models.CharField(max_length=200, null=True, blank=True)
     description = models.TextField(blank=True, null=True)
-    priority = models.CharField(max_length=1, choices=PRIORITY_CHOICES, default='M', null=True, blank=True)
+    priority = models.CharField(max_length=1, choices=PRIORITY_CHOICES, default='M')
     completed = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
