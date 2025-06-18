@@ -7,7 +7,7 @@ from django.http import JsonResponse
 from django.views.decorators.http import require_POST
 from .models import Task, Category, Tag, SharedList
 from .forms import TaskForm, CategoryForm, TagForm, SharedListForm
-from django.contrib.auth.models import User
+from django.contrib.auth import logout
 from django.utils import timezone
 
 
@@ -37,8 +37,9 @@ class CustomLoginView(LoginView):
         messages.success(self.request, f"Welcome back, {form.get_user().username}!")
         return super().form_valid(form)
 
-class CustomLogoutView(LogoutView):
-    next_page = reverse_lazy('login')
+def logout_view(request):
+    logout(request)
+    return redirect('login')
 
 
 @login_required
@@ -62,13 +63,14 @@ def task_list(request):
         tasks = tasks.filter(priority=priority)
     if search_query:
         tasks = tasks.filter(title__icontains=search_query)
+    from .models import PRIORITY_CHOICES
     
     context = {
         'tasks': tasks,
         'categories': categories,
         'tags': tags,
         'shared_lists': shared_lists,
-        'priority_choices': Task.priority,
+        'priority_choices': PRIORITY_CHOICES,
     }
     return render(request, 'tasks/task_list.html', context)
 

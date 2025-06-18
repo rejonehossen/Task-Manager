@@ -7,82 +7,8 @@
 {% block content %}
 <div class="flex flex-col md:flex-row gap-6">
     <!-- Sidebar -->
-    <div class="w-full md:w-1/4 lg:w-1/5 bg-white dark:bg-gray-800 rounded-lg shadow p-4">
-        <div class="mb-6">
-            <h2 class="text-xl font-bold mb-4">Filters</h2>
-            <form method="get" class="space-y-4">
-                <div>
-                    <label class="block text-sm font-medium mb-1">Category</label>
-                    <select name="category" class="w-full p-2 border rounded dark:bg-gray-700 dark:border-gray-600">
-                        <option value="">All Categories</option>
-                        {% for category in categories %}
-                            <option value="{{ category.id }}" {% if request.GET.category == category.id|stringformat:"s" %}selected{% endif %}>{{ category.name }}</option>
-                        {% endfor %}
-                    </select>
-                </div>
-                <div>
-                    <label class="block text-sm font-medium mb-1">Tag</label>
-                    <select name="tag" class="w-full p-2 border rounded dark:bg-gray-700 dark:border-gray-600">
-                        <option value="">All Tags</option>
-                        {% for tag in tags %}
-                            <option value="{{ tag.id }}" {% if request.GET.tag == tag.id|stringformat:"s" %}selected{% endif %}>{{ tag.name }}</option>
-                        {% endfor %}
-                    </select>
-                </div>
-                <div>
-                    <label class="block text-sm font-medium mb-1">Priority</label>
-                    <select name="priority" class="w-full p-2 border rounded dark:bg-gray-700 dark:border-gray-600">
-                        <option value="">All Priorities</option>
-                        {% for priority in priority_choices %}
-                            <option value="{{ priority.0 }}" {% if request.GET.priority == priority.0 %}selected{% endif %}>{{ priority.1 }}</option>
-                        {% endfor %}
-                    </select>
-                </div>
-                <div>
-                    <label class="block text-sm font-medium mb-1">Search</label>
-                    <input type="text" name="search" value="{{ request.GET.search }}" class="w-full p-2 border rounded dark:bg-gray-700 dark:border-gray-600" placeholder="Search tasks...">
-                </div>
-                <button type="submit" class="w-full bg-blue-600 text-white py-2 px-4 rounded hover:bg-blue-700">Apply Filters</button>
-                <a href="{% url 'task_list' %}" class="block text-center text-blue-600 dark:text-blue-400 hover:underline">Reset Filters</a>
-            </form>
-        </div>
-        
-        <div class="mb-6">
-            <h2 class="text-xl font-bold mb-4">Quick Actions</h2>
-            <div class="space-y-2">
-                <a href="{% url 'task_create' %}" class="block w-full bg-green-600 text-white py-2 px-4 rounded hover:bg-green-700 text-center">
-                    <i class="fas fa-plus mr-2"></i>New Task
-                </a>
-                <a href="{% url 'category_create' %}" class="block w-full bg-purple-600 text-white py-2 px-4 rounded hover:bg-purple-700 text-center">
-                    <i class="fas fa-tag mr-2"></i>New Category
-                </a>
-                <a href="{% url 'tag_create' %}" class="block w-full bg-indigo-600 text-white py-2 px-4 rounded hover:bg-indigo-700 text-center">
-                    <i class="fas fa-hashtag mr-2"></i>New Tag
-                </a>
-                <a href="{% url 'shared_list_create' %}" class="block w-full bg-yellow-600 text-white py-2 px-4 rounded hover:bg-yellow-700 text-center">
-                    <i class="fas fa-share-alt mr-2"></i>Share List
-                </a>
-            </div>
-        </div>
-        
-        <div>
-            <h2 class="text-xl font-bold mb-4">Shared Lists</h2>
-            {% if shared_lists %}
-                <ul class="space-y-2">
-                    {% for shared_list in shared_lists %}
-                        <li>
-                            <a href="{% url 'shared_list_detail' shared_list.id %}" class="flex items-center p-2 rounded hover:bg-gray-200 dark:hover:bg-gray-700">
-                                <i class="fas fa-users mr-2"></i>
-                                <span>{{ shared_list.title }}</span>
-                            </a>
-                        </li>
-                    {% endfor %}
-                </ul>
-            {% else %}
-                <p class="text-sm text-gray-500">No shared lists</p>
-            {% endif %}
-        </div>
-    </div>
+    {% include 'tasks/partials/_sidebar.html' %}
+    
 
     <!-- Main Content -->
     <div class="w-full md:w-3/4 lg:w-4/5">

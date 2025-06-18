@@ -1,10 +1,7 @@
 <!-- Created by Rejone Hossen | Premium Task Manager | 2025 -->
-{% extends "base.html" %}
+
 {% load static %}
 
-{% block title %}Premium Registration | Task Manager{% endblock %}
-
-{% block content %}
 <div class="min-h-screen flex items-center justify-center bg-gradient-to-br from-indigo-500 to-purple-600 dark:from-gray-800 dark:to-gray-900 p-4">
     <div class="w-full max-w-md">
         <!-- Animated Card -->
@@ -180,8 +177,104 @@
     }
     .animate-underline:hover::after {
         transform: scaleX(1);
-        transform
+        transform-origin: left;
+    }
+    
+    @keyframes spin-slow {
+        0% { transform: rotate(0deg); }
+        100% { transform: rotate(360deg); }
+    }
+    
+    .animate-spin-slow {
+        animation: spin-slow 5s linear infinite;
+    }
+    
+    /* Ripple effect */
+    .ripple {
+        position: relative;
+        overflow: hidden;
+    }
+    
+    .ripple:after {
+        content: "";
+        display: block;
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        top: 0;
+        left: 0;
+        pointer-events: none;
+        background-image: radial-gradient(circle, #fff 10%, transparent 10.01%);
+        background-repeat: no-repeat;
+        background-position: 50%;
+        transform: scale(10, 10);
+        opacity: 0;
+        transition: transform .5s, opacity 1s;
+    }
+    
+    .ripple:active:after {
+        transform: scale(0, 0);
+        opacity: .3;
+        transition: 0s;
+    }
+    
+    /* Floating animation */
+    @keyframes float {
+        0%, 100% { transform: translateY(0); }
+        50% { transform: translateY(-10px); }
+    }
+    
+    .floating {
+        animation: float 3s ease-in-out infinite;
+    }
+</style>
 
-
-
-{% endblock %}
+<script>
+    // Set current year
+    document.getElementById('year').textContent = new Date().getFullYear();
+    
+    // Add ripple effect to buttons
+    document.querySelectorAll('.ripple').forEach(button => {
+        button.addEventListener('click', function(e) {
+            e.preventDefault();
+            const rect = this.getBoundingClientRect();
+            const x = e.clientX - rect.left;
+            const y = e.clientY - rect.top;
+            
+            const ripple = document.createElement('span');
+            ripple.className = 'ripple-effect';
+            ripple.style.left = `${x}px`;
+            ripple.style.top = `${y}px`;
+            this.appendChild(ripple);
+            
+            setTimeout(() => {
+                ripple.remove();
+                this.form.submit();
+            }, 500);
+        });
+    });
+    
+    // Add animation to form elements on load
+    document.addEventListener('DOMContentLoaded', () => {
+        const form = document.querySelector('form');
+        if (form) {
+            const inputs = form.querySelectorAll('input');
+            inputs.forEach((input, index) => {
+                input.style.opacity = '0';
+                input.style.transform = 'translateX(-20px)';
+                input.style.transition = `opacity 0.5s ease ${index * 0.1}s, transform 0.5s ease ${index * 0.1}s`;
+                
+                setTimeout(() => {
+                    input.style.opacity = '1';
+                    input.style.transform = 'translateX(0)';
+                }, 100);
+            });
+        }
+        
+        // Add floating animation to decorative elements
+        const floatingElements = document.querySelectorAll('.floating');
+        floatingElements.forEach((el, index) => {
+            el.style.animationDelay = `${index * 0.2}s`;
+        });
+    });
+</script>

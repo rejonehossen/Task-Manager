@@ -2,12 +2,12 @@
 from django.urls import path
 from . import views
 from django.contrib.auth.decorators import login_required
-from .views import RegisterView, CustomLoginView, CustomLogoutView
+from .views import RegisterView, CustomLoginView, logout_view
 
 urlpatterns = [
     path('register/', RegisterView.as_view(), name='register'),
     path('login/', CustomLoginView.as_view(), name='login'),
-    path('logout/', CustomLogoutView.as_view(), name='logout'),
+    path('logout/', logout_view, name='logout'),
     path('', views.task_list, name='task_list'),
     path('create/', views.task_create, name='task_create'),
     path('update/<int:pk>/', views.task_update, name='task_update'),
