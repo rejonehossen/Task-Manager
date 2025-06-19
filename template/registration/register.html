@@ -1,9 +1,132 @@
-<!-- Created by Rejone Hossen | Premium Task Manager | 2025 -->
-
 {% load static %}
-
+<!DOCTYPE html>
+<html lang="en" class="h-full">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Premium Registration | Task Manager</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        .animate-underline {
+            position: relative;
+        }
+        .animate-underline::after {
+            content: '';
+            position: absolute;
+            width: 100%;
+            height: 2px;
+            bottom: -2px;
+            left: 0;
+            background-color: currentColor;
+            transform: scaleX(0);
+            transform-origin: right;
+            transition: transform 0.3s ease;
+        }
+        .animate-underline:hover::after {
+            transform: scaleX(1);
+            transform-origin: left;
+        }
+        
+        @keyframes spin-slow {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        .animate-spin-slow {
+            animation: spin-slow 5s linear infinite;
+        }
+        
+        /* Ripple effect */
+        .ripple {
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .ripple:after {
+            content: "";
+            display: block;
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            pointer-events: none;
+            background-image: radial-gradient(circle, #fff 10%, transparent 10.01%);
+            background-repeat: no-repeat;
+            background-position: 50%;
+            transform: scale(10, 10);
+            opacity: 0;
+            transition: transform .5s, opacity 1s;
+        }
+        
+        .ripple:active:after {
+            transform: scale(0, 0);
+            opacity: .3;
+            transition: 0s;
+        }
+        
+        /* Floating animation */
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+        
+        .floating {
+            animation: float 3s ease-in-out infinite;
+        }
+        
+        /* Custom file upload button */
+        .custom-file-input::-webkit-file-upload-button {
+            visibility: hidden;
+        }
+        .custom-file-input::before {
+            content: 'Choose profile picture';
+            display: inline-block;
+            background: linear-gradient(to bottom, #f9f9f9, #e3e3e3);
+            border: 1px solid #999;
+            border-radius: 3px;
+            padding: 5px 8px;
+            outline: none;
+            white-space: nowrap;
+            cursor: pointer;
+            text-shadow: 1px 1px #fff;
+            font-weight: 700;
+            font-size: 10pt;
+        }
+        .custom-file-input:hover::before {
+            border-color: black;
+        }
+        .custom-file-input:active::before {
+            background: -webkit-linear-gradient(top, #e3e3e3, #f9f9f9);
+        }
+        
+        /* Dark mode styles */
+        .dark .custom-file-input::before {
+            background: linear-gradient(to bottom, #4b5563, #374151);
+            border: 1px solid #6b7280;
+            color: #f3f4f6;
+            text-shadow: 1px 1px #111827;
+        }
+    </style>
+</head>
+<body class="h-full">
 <div class="min-h-screen flex items-center justify-center bg-gradient-to-br from-indigo-500 to-purple-600 dark:from-gray-800 dark:to-gray-900 p-4">
     <div class="w-full max-w-md">
+        <!-- Messages -->
+        {% if messages %}
+            <div class="mb-4">
+                {% for message in messages %}
+                    <div class="p-4 rounded-lg mb-2 text-center 
+                                {% if message.tags == 'success' %}bg-green-100 text-green-800 dark:bg-green-800 dark:text-green-100
+                                {% elif message.tags == 'warning' %}bg-yellow-100 text-yellow-800 dark:bg-yellow-800 dark:text-yellow-100
+                                {% else %}bg-blue-100 text-blue-800 dark:bg-blue-800 dark:text-blue-100{% endif %}">
+                        {{ message }}
+                    </div>
+                {% endfor %}
+            </div>
+        {% endif %}
+        
         <!-- Animated Card -->
         <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-2xl overflow-hidden transform transition-all duration-500 hover:scale-[1.02]">
             <!-- Decorative Header -->
@@ -13,22 +136,20 @@
                 <div class="absolute top-1/2 left-1/2 w-64 h-64 bg-white bg-opacity-3 rounded-full transform -translate-x-1/2 -translate-y-1/2"></div>
                 
                 <h1 class="text-3xl font-bold text-white relative z-10">
-                    <span class="inline-block animate-spin-slow">✨</span> Join Us!
+                    <span class="inline-block animate-spin-slow">✨</span> Join Premium
                 </h1>
-                <p class="text-indigo-100 mt-2 relative z-10">Create your premium account</p>
+                <p class="text-indigo-100 mt-2 relative z-10">Create your exclusive account</p>
             </div>
             
             <!-- Registration Form -->
             <div class="p-8">
-                <form method="post" class="space-y-6">
+                <form method="POST" action="{% url 'register' %}" enctype="multipart/form-data" class="space-y-6">
                     {% csrf_token %}
                     
                     <!-- Username Field -->
                     <div class="relative group">
-                        <input type="text" name="username" id="username" required
-                               class="w-full px-4 py-3 bg-gray-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 peer"
-                               placeholder=" ">
-                        <label for="username" 
+                        {{ form.username }}
+                        <label for="id_username" 
                                class="absolute left-4 top-3 text-gray-500 dark:text-gray-400 pointer-events-none transition-all 
                                       peer-placeholder-shown:text-base peer-placeholder-shown:top-3 
                                       peer-focus:-top-3 peer-focus:text-sm peer-focus:text-indigo-500
@@ -36,14 +157,15 @@
                             <i class="fas fa-user-circle mr-1"></i> Username
                         </label>
                         <div class="absolute bottom-0 left-0 w-0 h-0.5 bg-indigo-500 transition-all duration-300 group-focus-within:w-full"></div>
+                        {% if form.username.errors %}
+                            <div class="text-red-500 text-xs mt-1">{{ form.username.errors }}</div>
+                        {% endif %}
                     </div>
                     
                     <!-- Email Field -->
                     <div class="relative group">
-                        <input type="email" name="email" id="email" required
-                               class="w-full px-4 py-3 bg-gray-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 peer"
-                               placeholder=" ">
-                        <label for="email" 
+                        {{ form.email }}
+                        <label for="id_email" 
                                class="absolute left-4 top-3 text-gray-500 dark:text-gray-400 pointer-events-none transition-all 
                                       peer-placeholder-shown:text-base peer-placeholder-shown:top-3 
                                       peer-focus:-top-3 peer-focus:text-sm peer-focus:text-indigo-500
@@ -51,14 +173,15 @@
                             <i class="fas fa-envelope mr-1"></i> Email
                         </label>
                         <div class="absolute bottom-0 left-0 w-0 h-0.5 bg-indigo-500 transition-all duration-300 group-focus-within:w-full"></div>
+                        {% if form.email.errors %}
+                            <div class="text-red-500 text-xs mt-1">{{ form.email.errors }}</div>
+                        {% endif %}
                     </div>
                     
                     <!-- Password Field -->
                     <div class="relative group">
-                        <input type="password" name="password1" id="password1" required
-                               class="w-full px-4 py-3 bg-gray-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 peer"
-                               placeholder=" ">
-                        <label for="password1" 
+                        {{ form.password1 }}
+                        <label for="id_password1" 
                                class="absolute left-4 top-3 text-gray-500 dark:text-gray-400 pointer-events-none transition-all 
                                       peer-placeholder-shown:text-base peer-placeholder-shown:top-3 
                                       peer-focus:-top-3 peer-focus:text-sm peer-focus:text-indigo-500
@@ -66,14 +189,15 @@
                             <i class="fas fa-key mr-1"></i> Password
                         </label>
                         <div class="absolute bottom-0 left-0 w-0 h-0.5 bg-indigo-500 transition-all duration-300 group-focus-within:w-full"></div>
+                        {% if form.password1.errors %}
+                            <div class="text-red-500 text-xs mt-1">{{ form.password1.errors }}</div>
+                        {% endif %}
                     </div>
                     
                     <!-- Password Confirmation -->
                     <div class="relative group">
-                        <input type="password" name="password2" id="password2" required
-                               class="w-full px-4 py-3 bg-gray-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 peer"
-                               placeholder=" ">
-                        <label for="password2" 
+                        {{ form.password2 }}
+                        <label for="id_password2" 
                                class="absolute left-4 top-3 text-gray-500 dark:text-gray-400 pointer-events-none transition-all 
                                       peer-placeholder-shown:text-base peer-placeholder-shown:top-3 
                                       peer-focus:-top-3 peer-focus:text-sm peer-focus:text-indigo-500
@@ -81,6 +205,65 @@
                             <i class="fas fa-key mr-1"></i> Confirm Password
                         </label>
                         <div class="absolute bottom-0 left-0 w-0 h-0.5 bg-indigo-500 transition-all duration-300 group-focus-within:w-full"></div>
+                        {% if form.password2.errors %}
+                            <div class="text-red-500 text-xs mt-1">{{ form.password2.errors }}</div>
+                        {% endif %}
+                    </div>
+                    
+                    <!-- Profile Picture Field -->
+                    <div class="relative group">
+                        <div class="flex items-center space-x-4">
+                            <div class="shrink-0">
+                                <img id="profile-preview" class="h-12 w-12 rounded-full object-cover border-2 border-indigo-200 dark:border-indigo-800" 
+                                     src="{% static 'default_profile.png' %}" alt="Preview">
+                            </div>
+                            <div class="flex-1">
+                                <label class="block">
+                                    <span class="sr-only">Choose profile photo</span>
+                                    <input type="file" name="profile_picture" id="id_profile_picture" 
+                                           class="block w-full text-sm text-gray-500 dark:text-gray-400
+                                                  file:mr-4 file:py-2 file:px-4
+                                                  file:rounded-md file:border-0
+                                                  file:text-sm file:font-semibold
+                                                  file:bg-indigo-50 file:text-indigo-700 dark:file:bg-indigo-900 dark:file:text-indigo-100
+                                                  hover:file:bg-indigo-100 dark:hover:file:bg-indigo-800
+                                                  cursor-pointer"/>
+                                </label>
+                            </div>
+                        </div>
+                        {% if form.profile_picture.errors %}
+                            <div class="text-red-500 text-xs mt-1">{{ form.profile_picture.errors }}</div>
+                        {% endif %}
+                    </div>
+                    
+                    <!-- Bio Field -->
+                    <div class="relative group">
+                        {{ form.bio }}
+                        <label for="id_bio" 
+                               class="absolute left-4 top-3 text-gray-500 dark:text-gray-400 pointer-events-none transition-all 
+                                      peer-placeholder-shown:text-base peer-placeholder-shown:top-3 
+                                      peer-focus:-top-3 peer-focus:text-sm peer-focus:text-indigo-500
+                                      -top-3 text-sm bg-white dark:bg-gray-800 px-1">
+                            <i class="fas fa-edit mr-1"></i> Bio (Optional)
+                        </label>
+                        <div class="absolute bottom-0 left-0 w-0 h-0.5 bg-indigo-500 transition-all duration-300 group-focus-within:w-full"></div>
+                    </div>
+                    
+                    <!-- Theme Selection -->
+                    <div class="relative group">
+                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                            <i class="fas fa-palette mr-1"></i> Theme Preference
+                        </label>
+                        <div class="flex space-x-4">
+                            <label class="inline-flex items-center">
+                                <input type="radio" name="theme" value="light" class="form-radio h-4 w-4 text-indigo-600" checked>
+                                <span class="ml-2 text-gray-700 dark:text-gray-300">Light</span>
+                            </label>
+                            <label class="inline-flex items-center">
+                                <input type="radio" name="theme" value="dark" class="form-radio h-4 w-4 text-indigo-600">
+                                <span class="ml-2 text-gray-700 dark:text-gray-300">Dark</span>
+                            </label>
+                        </div>
                     </div>
                     
                     <!-- Terms Checkbox -->
@@ -91,7 +274,7 @@
                         </div>
                         <div class="ml-3 text-sm">
                             <label for="terms" class="font-medium text-gray-700 dark:text-gray-300">
-                                I agree to the <a href="#" class="text-indigo-600 dark:text-indigo-400 hover:text-indigo-500">Terms</a> and <a href="#" class="text-indigo-600 dark:text-indigo-400 hover:text-indigo-500">Privacy Policy</a>
+                                I agree to the <a href="#" class="text-indigo-600 dark:text-indigo-400 hover:text-indigo-500 animate-underline">Terms</a> and <a href="#" class="text-indigo-600 dark:text-indigo-400 hover:text-indigo-500 animate-underline">Privacy Policy</a>
                             </label>
                         </div>
                     </div>
@@ -102,7 +285,7 @@
                         <span class="absolute inset-0 bg-gradient-to-r from-indigo-600 to-purple-600 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></span>
                         <span class="relative flex items-center">
                             <i class="fas fa-user-plus mr-2 animate-pulse"></i>
-                            Create Account
+                            Create Premium Account
                         </span>
                     </button>
                 </form>
@@ -151,92 +334,67 @@
             </div>
         </div>
         
-        <!-- Watermark -->
-        <div class="mt-6 text-center text-white dark:text-gray-300 text-opacity-70">
-            <p>Premium Experience © <span id="year"></span></p>
-        </div>
+        <!-- Premium Footer -->
+        <footer class="mt-8 text-center">
+            <div class="text-white dark:text-gray-300 text-opacity-80 text-sm">
+                <p class="mb-2">Experience the power of premium task management</p>
+                <div class="flex justify-center space-x-4">
+                    <a href="#" class="hover:text-white transition-colors"><i class="fas fa-globe"></i></a>
+                    <a href="#" class="hover:text-white transition-colors"><i class="fab fa-twitter"></i></a>
+                    <a href="#" class="hover:text-white transition-colors"><i class="fab fa-github"></i></a>
+                    <a href="#" class="hover:text-white transition-colors"><i class="fab fa-linkedin"></i></a>
+                </div>
+                <p class="mt-4 text-xs text-opacity-60">
+                    © <span id="year"></span> Premium Task Manager. All rights reserved.<br>
+                    Crafted with <i class="fas fa-heart text-red-400"></i> by Rejone Hossen
+                </p>
+            </div>
+        </footer>
     </div>
 </div>
-
-<!-- Animation Styles -->
-<style>
-    .animate-underline {
-        position: relative;
-    }
-    .animate-underline::after {
-        content: '';
-        position: absolute;
-        width: 100%;
-        height: 2px;
-        bottom: -2px;
-        left: 0;
-        background-color: currentColor;
-        transform: scaleX(0);
-        transform-origin: right;
-        transition: transform 0.3s ease;
-    }
-    .animate-underline:hover::after {
-        transform: scaleX(1);
-        transform-origin: left;
-    }
-    
-    @keyframes spin-slow {
-        0% { transform: rotate(0deg); }
-        100% { transform: rotate(360deg); }
-    }
-    
-    .animate-spin-slow {
-        animation: spin-slow 5s linear infinite;
-    }
-    
-    /* Ripple effect */
-    .ripple {
-        position: relative;
-        overflow: hidden;
-    }
-    
-    .ripple:after {
-        content: "";
-        display: block;
-        position: absolute;
-        width: 100%;
-        height: 100%;
-        top: 0;
-        left: 0;
-        pointer-events: none;
-        background-image: radial-gradient(circle, #fff 10%, transparent 10.01%);
-        background-repeat: no-repeat;
-        background-position: 50%;
-        transform: scale(10, 10);
-        opacity: 0;
-        transition: transform .5s, opacity 1s;
-    }
-    
-    .ripple:active:after {
-        transform: scale(0, 0);
-        opacity: .3;
-        transition: 0s;
-    }
-    
-    /* Floating animation */
-    @keyframes float {
-        0%, 100% { transform: translateY(0); }
-        50% { transform: translateY(-10px); }
-    }
-    
-    .floating {
-        animation: float 3s ease-in-out infinite;
-    }
-</style>
 
 <script>
     // Set current year
     document.getElementById('year').textContent = new Date().getFullYear();
     
+    // Profile picture preview
+    document.getElementById('id_profile_picture').addEventListener('change', function(e) {
+        const file = e.target.files[0];
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = function(event) {
+                document.getElementById('profile-preview').src = event.target.result;
+            };
+            reader.readAsDataURL(file);
+        }
+    });
+    
+    // Add animation to form elements on load
+    document.addEventListener('DOMContentLoaded', () => {
+        const form = document.querySelector('form');
+        if (form) {
+            const inputs = form.querySelectorAll('input, textarea');
+            inputs.forEach((input, index) => {
+                input.classList.add('w-full', 'px-4', 'py-3', 'bg-gray-50', 'dark:bg-gray-700', 
+                                  'border', 'border-gray-200', 'dark:border-gray-600', 
+                                  'rounded-lg', 'focus:outline-none', 'focus:ring-2', 
+                                  'focus:ring-indigo-500', 'peer');
+                
+                input.style.opacity = '0';
+                input.style.transform = 'translateY(10px)';
+                input.style.transition = `opacity 0.5s ease ${index * 0.1}s, transform 0.5s ease ${index * 0.1}s`;
+                
+                setTimeout(() => {
+                    input.style.opacity = '1';
+                    input.style.transform = 'translateY(0)';
+                }, 100);
+            });
+        }
+    });
+    
     // Add ripple effect to buttons
     document.querySelectorAll('.ripple').forEach(button => {
         button.addEventListener('click', function(e) {
-            e.preventDefault();
             const rect = this.getBoundingClientRect();
             const x = e.clientX - rect.left;
             const y = e.clientY - rect.top;
@@ -249,32 +407,15 @@
             
             setTimeout(() => {
                 ripple.remove();
-                this.form.submit();
             }, 500);
         });
     });
     
-    // Add animation to form elements on load
-    document.addEventListener('DOMContentLoaded', () => {
-        const form = document.querySelector('form');
-        if (form) {
-            const inputs = form.querySelectorAll('input');
-            inputs.forEach((input, index) => {
-                input.style.opacity = '0';
-                input.style.transform = 'translateX(-20px)';
-                input.style.transition = `opacity 0.5s ease ${index * 0.1}s, transform 0.5s ease ${index * 0.1}s`;
-                
-                setTimeout(() => {
-                    input.style.opacity = '1';
-                    input.style.transform = 'translateX(0)';
-                }, 100);
-            });
-        }
-        
-        // Add floating animation to decorative elements
-        const floatingElements = document.querySelectorAll('.floating');
-        floatingElements.forEach((el, index) => {
-            el.style.animationDelay = `${index * 0.2}s`;
-        });
-    });
+    // Dark mode toggle (example - you can implement actual dark mode toggle)
+    function toggleDarkMode() {
+        document.documentElement.classList.toggle('dark');
+    }
 </script>
+</body>
+</html>
+

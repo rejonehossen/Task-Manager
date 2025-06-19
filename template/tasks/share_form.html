@@ -1,0 +1,81 @@
+<!-- Created by Rejone Hossen -->
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
+<div class="form-container animate-fade-in">
+  <div class="form-card animate-slide-up">
+    <h2 class="form-title">{% if object %}Edit{% else %}Create{% endif %} Shared List</h2>
+    
+    <form method="post" class="premium-form">
+      {% csrf_token %}
+      
+      <div class="form-group animate-float-in" style="--delay: 0.1s">
+        <label for="{{ form.title.id_for_label }}">Title</label>
+        {{ form.title }}
+        <div class="form-icon">
+          <i class="fas fa-heading"></i>
+        </div>
+      </div>
+      
+      <div class="form-group animate-float-in" style="--delay: 0.2s">
+        <label for="{{ form.description.id_for_label }}">Description</label>
+        {{ form.description }}
+      </div>
+      
+      <div class="form-group animate-float-in" style="--delay: 0.3s">
+        <label for="{{ form.collaborators.id_for_label }}">Collaborators</label>
+        {{ form.collaborators }}
+      </div>
+      
+      <button type="submit" class="btn-premium btn-3d">
+        <span class="btn-text">Save Shared List</span>
+        <span class="btn-icon">
+          <i class="fas fa-users"></i>
+        </span>
+      </button>
+    </form>
+  </div>
+</div>
+
+<script>
+// Created by Rejone Hossen
+document.addEventListener('DOMContentLoaded', function() {
+  // Initialize Select2 with animations
+  $('.select2').select2({
+    dropdownParent: $('.form-card'),
+    placeholder: "Select collaborators...",
+    allowClear: true,
+    width: '100%'
+  }).on('select2:open', function() {
+    $('.select2-dropdown').addClass('animate-slide-up');
+  });
+  
+  // Color picker preview update
+  const colorInput = document.querySelector('input[type="color"]');
+  const colorPreview = document.getElementById('colorPreview');
+  if (colorInput && colorPreview) {
+    colorInput.addEventListener('input', function() {
+      colorPreview.style.backgroundColor = this.value;
+    });
+    // Set initial color
+    colorPreview.style.backgroundColor = colorInput.value || '#6e8efb';
+  }
+});
+</script>
+{% endblock %}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

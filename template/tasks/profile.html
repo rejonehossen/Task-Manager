@@ -62,29 +62,32 @@
         </div>
         
         <div class="mb-6">
-            <h2 class="text-xl font-bold mb-4">Recent Activity</h2>
-            <div class="space-y-3">
-                <div class="flex items-start p-3 bg-gray-100 dark:bg-gray-700 rounded-lg">
-                    <div class="mr-3 text-blue-500">
-                        <i class="fas fa-plus-circle"></i>
-                    </div>
-                    <div>
-                        <p class="font-medium">Created a new task</p>
-                        <p class="text-sm text-gray-500 dark:text-gray-400">2 hours ago</p>
-                    </div>
-                </div>
-                
-                <div class="flex items-start p-3 bg-gray-100 dark:bg-gray-700 rounded-lg">
-                    <div class="mr-3 text-green-500">
-                        <i class="fas fa-check-circle"></i>
-                    </div>
-                    <div>
-                        <p class="font-medium">Completed "Finish project"</p>
-                        <p class="text-sm text-gray-500 dark:text-gray-400">1 day ago</p>
-                    </div>
-                </div>
+    <h2 class="text-xl font-bold mb-4">Recent Activity</h2>
+    <div class="space-y-3">
+        {% for task in recent_tasks %}
+        <div class="flex items-start p-3 bg-gray-100 dark:bg-gray-700 rounded-lg">
+            <div class="mr-3 {% if task.completed %}text-green-500{% else %}text-blue-500{% endif %}">
+                <i class="fas {% if task.completed %}fa-check-circle{% else %}fa-plus-circle{% endif %}"></i>
+            </div>
+            <div>
+                <p class="font-medium">
+                    {% if task.completed %}
+                        Completed "{{ task.title }}"
+                    {% else %}
+                        Created a new task "{{ task.title }}"
+                    {% endif %}
+                </p>
+                <p class="text-sm text-gray-500 dark:text-gray-400">
+                    {{ task.created_at|timesince }} ago
+                </p>
             </div>
         </div>
+        {% empty %}
+        <p class="text-gray-500 dark:text-gray-400">No recent activity found.</p>
+        {% endfor %}
+    </div>
+</div>
+
         
         <div>
             <h2 class="text-xl font-bold mb-4">Account Settings</h2>

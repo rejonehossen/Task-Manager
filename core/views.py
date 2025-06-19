@@ -18,16 +18,20 @@ from django.urls import reverse_lazy
 from django.contrib.auth import login
 from .forms import CustomUserCreationForm, CustomLoginForm
 
-class RegisterView(FormView):
-    template_name = 'registration/register.html'
-    form_class = CustomUserCreationForm
-    success_url = reverse_lazy('home')  # Redirect to task dashboard
-
-    def form_valid(self, form):
-        user = form.save()
-        login(self.request, user)
-        messages.success(self.request, "Registration successful. Welcome, " + user.username + "!")
-        return super().form_valid(form)
+def register_view(request):
+    if request.method == 'POST':
+        form = CustomUserCreationForm(request.POST, request.FILES)  # Notice request.FILES for file uploads
+        if form.is_valid():
+            user = form.save()
+            login(request, user)
+            messages.success(request, f"Registration successful. Welcome, {user.username}!")
+            return redirect(reverse_lazy('task_list'))
+        else:
+            messages.warning(request, "Registration failed. Please correct the errors below.")
+    else:
+        form = CustomUserCreationForm()
+    
+    return render(request, 'registration/register.html', {'form': form})
 
 class CustomLoginView(LoginView):
     authentication_form = CustomLoginForm
@@ -181,12 +185,15 @@ def profile(request):
     tasks_count = Task.objects.filter(user=user).count()
     completed_count = Task.objects.filter(user=user, completed=True).count()
     overdue_count = Task.objects.filter(user=user, due_date__lt=timezone.now(), completed=False).count()
-    
+
+    recent_tasks = Task.objects.filter(user=user).order_by('-created_at')[:5]  # or updated_at if you prefer
+
     context = {
         'user': user,
         'tasks_count': tasks_count,
         'completed_count': completed_count,
         'overdue_count': overdue_count,
+        'recent_tasks': recent_tasks,
     }
     return render(request, 'tasks/profile.html', context)
 
