@@ -3,6 +3,326 @@
 {% load static %}
 
 {% block content %}
+
+
+
+
+
+
+
+
+
+<style>
+
+
+
+  /* Premium Base Styles */
+.form-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  background: linear-gradient(135deg, #f5f7fa 0%, #e4e8f0 100%);
+  padding: 2rem;
+  position: relative;
+  overflow: hidden;
+}
+
+.form-container::before {
+  content: "";
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0) 70%);
+  z-index: 0;
+}
+
+/* Premium Card Design */
+.form-card {
+  background: white;
+  border-radius: 20px;
+  box-shadow: 0 30px 60px -20px rgba(0, 0, 0, 0.2), 
+              0 0 0 1px rgba(0, 0, 0, 0.02);
+  padding: 3rem;
+  width: 100%;
+  max-width: 500px;
+  position: relative;
+  z-index: 1;
+  overflow: hidden;
+  transition: all 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.1);
+}
+
+.form-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 40px 70px -25px rgba(0, 0, 0, 0.25), 
+              0 0 0 1px rgba(0, 0, 0, 0.03);
+}
+
+.form-card::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 100%;
+  height: 8px;
+  background: linear-gradient(90deg, #6a11cb 0%, #2575fc 100%);
+}
+
+/* Premium Typography */
+.form-title {
+  font-size: 2rem;
+  font-weight: 700;
+  color: #2c3e50;
+  margin-bottom: 2rem;
+  position: relative;
+  display: inline-block;
+  background: linear-gradient(90deg, #6a11cb 0%, #2575fc 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  letter-spacing: -0.5px;
+}
+
+/* Premium Form Elements */
+.form-group {
+  margin-bottom: 1.8rem;
+  position: relative;
+  transition: all 0.4s ease;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 0.5rem;
+  font-weight: 600;
+  color: #5a6a7f;
+  font-size: 0.9rem;
+  letter-spacing: 0.5px;
+}
+
+.form-group input,
+.form-group select {
+  width: 100%;
+  padding: 1rem 1rem 1rem 3rem;
+  border: 1px solid #e0e6ed;
+  border-radius: 12px;
+  font-size: 1rem;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  background-color: #f8fafc;
+  box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.03);
+}
+
+.form-group input:focus,
+.form-group select:focus {
+  outline: none;
+  border-color: #2575fc;
+  box-shadow: 0 0 0 3px rgba(37, 117, 252, 0.15);
+  background-color: white;
+}
+
+/* Premium Icons */
+.form-icon {
+  position: absolute;
+  left: 1rem;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #7e8a9a;
+  transition: all 0.3s ease;
+}
+
+.form-group input:focus + .form-icon {
+  color: #2575fc;
+}
+
+/* Premium Color Picker */
+.color-picker-container {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.color-preview {
+  width: 30px;
+  height: 30px;
+  border-radius: 8px;
+  margin-left: 1rem;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  border: 2px solid white;
+  transition: all 0.3s ease;
+}
+
+/* Premium Button */
+.btn-premium {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem 2rem;
+  background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
+  color: white;
+  border: none;
+  border-radius: 12px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  overflow: hidden;
+  position: relative;
+  transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
+  box-shadow: 0 4px 15px rgba(106, 17, 203, 0.3);
+  width: 100%;
+  margin-top: 1rem;
+}
+
+.btn-premium:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(106, 17, 203, 0.4);
+}
+
+.btn-premium:active {
+  transform: translateY(0);
+}
+
+.btn-text {
+  position: relative;
+  z-index: 2;
+  transition: all 0.3s ease;
+}
+
+.btn-icon {
+  margin-left: 0.8rem;
+  position: relative;
+  z-index: 2;
+  transition: all 0.3s ease;
+}
+
+.btn-premium:hover .btn-text {
+  transform: translateX(5px);
+}
+
+.btn-premium:hover .btn-icon {
+  transform: translateX(10px);
+}
+
+.btn-premium::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(135deg, #2575fc 0%, #6a11cb 100%);
+  transition: all 0.6s ease;
+  z-index: 1;
+}
+
+.btn-premium:hover::before {
+  left: 0;
+}
+
+/* Premium Animations */
+@keyframes animate-fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes animate-slide-up {
+  from {
+    transform: translateY(30px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+@keyframes animate-float-in {
+  from {
+    transform: translateY(20px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+.animate-fade-in {
+  animation: animate-fade-in 0.8s ease forwards;
+}
+
+.animate-slide-up {
+  animation: animate-slide-up 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+}
+
+.animate-float-in {
+  opacity: 0;
+  animation: animate-float-in 0.5s cubic-bezier(0.23, 1, 0.32, 1) forwards;
+  animation-delay: var(--delay);
+}
+
+/* Premium Hover Effects */
+.form-group:hover {
+  transform: translateX(5px);
+}
+
+/* Responsive Adjustments */
+@media (max-width: 768px) {
+  .form-card {
+    padding: 2rem;
+  }
+  
+  .form-title {
+    font-size: 1.8rem;
+  }
+}
+
+/* Premium Micro-interactions */
+input:focus ~ label,
+select:focus ~ label {
+  color: #2575fc;
+  transform: translateY(-5px);
+}
+
+/* Premium Glow Effect */
+.form-card:hover::before {
+  content: "";
+  position: absolute;
+  top: -2px;
+  left: -2px;
+  right: -2px;
+  bottom: -2px;
+  z-index: -1;
+  background: linear-gradient(45deg, #6a11cb, #2575fc, #6a11cb);
+  background-size: 200% 200%;
+  border-radius: 22px;
+  animation: gradientGlow 3s ease infinite;
+  filter: blur(5px);
+  opacity: 0.7;
+}
+
+@keyframes gradientGlow {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+</style>
+
+
+
+
+
+
 <div class="form-container animate-fade-in">
   <div class="form-card animate-slide-up">
     <h2 class="form-title">{% if object %}Edit{% else %}Create{% endif %} Category</h2>

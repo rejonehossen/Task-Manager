@@ -1,0 +1,300 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="premium-container animate__animated animate__fadeIn">
+    <div class="premium-card animate__animated animate__zoomIn">
+        <div class="premium-header">
+            <h2 class="premium-title">Create Shared List</h2>
+            <div class="premium-decoration">
+                <div class="decoration-circle"></div>
+                <div class="decoration-circle"></div>
+                <div class="decoration-circle"></div>
+            </div>
+        </div>
+
+        <form method="POST" class="premium-form">
+            {% csrf_token %}
+            
+            <div class="form-group premium-form-group">
+                <label class="premium-label">{{ form.title.label }}</label>
+                {{ form.title }}
+                <div class="premium-focus-border"></div>
+            </div>
+            
+            <div class="form-group premium-form-group">
+                <label class="premium-label">{{ form.description.label }}</label>
+                {{ form.description }}
+                <div class="premium-focus-border"></div>
+            </div>
+            
+            <div class="form-group premium-form-group">
+                <label class="premium-label">{{ form.collaborators.label }}</label>
+                {{ form.collaborators }}
+                <div class="premium-focus-border"></div>
+                <small class="premium-hint">Hold Ctrl/Cmd to select multiple collaborators</small>
+            </div>
+            
+            <button type="submit" class="premium-btn premium-btn-primary animate__animated animate__pulse animate__infinite">
+                <span class="btn-text">Create Shared List</span>
+                <span class="btn-icon">
+                    <i class="fas fa-share-alt"></i>
+                </span>
+                <span class="btn-ripple"></span>
+            </button>
+        </form>
+    </div>
+</div>
+
+<style>
+    .premium-container {
+        max-width: 800px;
+        margin: 2rem auto;
+        padding: 2rem;
+        background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+        border-radius: 20px;
+        box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
+    }
+
+    .premium-card {
+        background: white;
+        border-radius: 15px;
+        padding: 2.5rem;
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.05);
+        position: relative;
+        overflow: hidden;
+    }
+
+    .premium-card::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 5px;
+        background: linear-gradient(90deg, #667eea, #764ba2, #6B8DD6, #8E37D7);
+        background-size: 400% 400%;
+        animation: gradientBG 8s ease infinite;
+    }
+
+    .premium-header {
+        text-align: center;
+        margin-bottom: 2.5rem;
+        position: relative;
+    }
+
+    .premium-title {
+        font-size: 2rem;
+        color: #333;
+        font-weight: 700;
+        margin-bottom: 1rem;
+        background: linear-gradient(90deg, #667eea, #764ba2);
+        -webkit-background-clip: text;
+        background-clip: text;
+        color: transparent;
+    }
+
+    .premium-decoration {
+        display: flex;
+        justify-content: center;
+        gap: 10px;
+        margin-bottom: 1.5rem;
+    }
+
+    .decoration-circle {
+        width: 12px;
+        height: 12px;
+        border-radius: 50%;
+        background: #667eea;
+        opacity: 0.7;
+        animation: bounce 2s infinite ease-in-out;
+    }
+
+    .decoration-circle:nth-child(1) {
+        animation-delay: 0s;
+        background: #667eea;
+    }
+
+    .decoration-circle:nth-child(2) {
+        animation-delay: 0.2s;
+        background: #764ba2;
+    }
+
+    .decoration-circle:nth-child(3) {
+        animation-delay: 0.4s;
+        background: #6B8DD6;
+    }
+
+    .premium-form-group {
+        margin-bottom: 1.8rem;
+        position: relative;
+    }
+
+    .premium-label {
+        display: block;
+        margin-bottom: 0.5rem;
+        font-weight: 600;
+        color: #555;
+        transition: all 0.3s;
+    }
+
+    .premium-form-group input,
+    .premium-form-group textarea,
+    .premium-form-group select {
+        width: 100%;
+        padding: 12px 15px;
+        border: 2px solid #e0e0e0;
+        border-radius: 8px;
+        font-size: 1rem;
+        transition: all 0.3s;
+        background-color: #f9f9f9;
+    }
+
+    .premium-form-group input:focus,
+    .premium-form-group textarea:focus,
+    .premium-form-group select:focus {
+        outline: none;
+        border-color: #667eea;
+        box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.2);
+    }
+
+    .premium-focus-border {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        width: 0;
+        height: 2px;
+        background: linear-gradient(90deg, #667eea, #764ba2);
+        transition: width 0.4s ease;
+    }
+
+    .premium-form-group input:focus ~ .premium-focus-border,
+    .premium-form-group textarea:focus ~ .premium-focus-border,
+    .premium-form-group select:focus ~ .premium-focus-border {
+        width: 100%;
+    }
+
+    .premium-hint {
+        display: block;
+        margin-top: 0.5rem;
+        font-size: 0.85rem;
+        color: #888;
+        font-style: italic;
+    }
+
+    .premium-btn {
+        position: relative;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        padding: 12px 24px;
+        border: none;
+        border-radius: 8px;
+        font-size: 1rem;
+        font-weight: 600;
+        cursor: pointer;
+        overflow: hidden;
+        transition: all 0.3s;
+        text-decoration: none;
+        margin-top: 1rem;
+    }
+
+    .premium-btn-primary {
+        background: linear-gradient(90deg, #667eea, #764ba2);
+        color: white;
+        box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+    }
+
+    .premium-btn-primary:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 20px rgba(102, 126, 234, 0.6);
+    }
+
+    .premium-btn-primary:active {
+        transform: translateY(0);
+    }
+
+    .btn-text {
+        position: relative;
+        z-index: 2;
+    }
+
+    .btn-icon {
+        margin-left: 10px;
+        position: relative;
+        z-index: 2;
+    }
+
+    .btn-ripple {
+        position: absolute;
+        background: rgba(255, 255, 255, 0.4);
+        border-radius: 50%;
+        transform: scale(0);
+        animation: ripple 1.5s infinite;
+        pointer-events: none;
+    }
+
+    @keyframes ripple {
+        to {
+            transform: scale(4);
+            opacity: 0;
+        }
+    }
+
+    @keyframes gradientBG {
+        0% {
+            background-position: 0% 50%;
+        }
+        50% {
+            background-position: 100% 50%;
+        }
+        100% {
+            background-position: 0% 50%;
+        }
+    }
+
+    @keyframes bounce {
+        0%, 100% {
+            transform: translateY(0);
+        }
+        50% {
+            transform: translateY(-10px);
+        }
+    }
+
+    .select2-container--default .select2-selection--multiple {
+        border: 2px solid #e0e0e0 !important;
+        border-radius: 8px !important;
+        min-height: 42px !important;
+    }
+
+    .select2-container--default.select2-container--focus .select2-selection--multiple {
+        border-color: #667eea !important;
+        box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.2) !important;
+    }
+</style>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Ripple effect for buttons
+        const buttons = document.querySelectorAll('.premium-btn');
+        buttons.forEach(button => {
+            button.addEventListener('click', function(e) {
+                const x = e.clientX - e.target.getBoundingClientRect().left;
+                const y = e.clientY - e.target.getBoundingClientRect().top;
+                
+                const ripple = document.createElement('span');
+                ripple.classList.add('btn-ripple');
+                ripple.style.left = `${x}px`;
+                ripple.style.top = `${y}px`;
+                
+                this.appendChild(ripple);
+                
+                setTimeout(() => {
+                    ripple.remove();
+                }, 1000);
+            });
+        });
+    });
+</script>
+{% endblock %}
