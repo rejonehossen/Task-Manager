@@ -1,152 +1,242 @@
-<!-- Created by Rejone Hossen | Premium Task Manager | 2025 -->
-<div class="w-full md:w-1/4 lg:w-1/5 bg-white dark:bg-gray-800 rounded-lg shadow p-4 h-fit sticky top-4">
-    <!-- Filters Section -->
-    <div class="mb-6">
-        <h2 class="text-xl font-bold mb-4 flex items-center">
-            <i class="fas fa-filter mr-2 text-blue-500"></i>
-            Filters
-        </h2>
-        <form method="get" class="space-y-4">
-            <!-- Category Filter -->
-            <div>
-                <label class="block text-sm font-medium mb-1 flex items-center">
-                    <i class="fas fa-tag mr-2 text-gray-500"></i>
-                    Category
-                </label>
-                <select name="category" class="w-full p-2 border rounded dark:bg-gray-700 dark:border-gray-600">
-                    <option value="">All Categories</option>
-                    {% for category in categories %}
-                        <option value="{{ category.id }}" {% if request.GET.category == category.id|stringformat:"s" %}selected{% endif %}>
-                            {{ category.name }}
-                        </option>
-                    {% endfor %}
-                </select>
-            </div>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Task Manager Sidebar</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <style>
+        /* Custom styles for sidebar animation */
+        .sidebar-hide {
+            transform: translateX(-100%);
+        }
+        .sidebar-show {
+            transform: translateX(0);
+        }
+        .sidebar-transition {
+            transition: transform 0.3s ease-in-out;
+        }
 
-            <!-- Tag Filter -->
-            <div>
-                <label class="block text-sm font-medium mb-1 flex items-center">
-                    <i class="fas fa-hashtag mr-2 text-gray-500"></i>
-                    Tag
-                </label>
-                <select name="tag" class="w-full p-2 border rounded dark:bg-gray-700 dark:border-gray-600">
-                    <option value="">All Tags</option>
-                    {% for tag in tags %}
-                        <option value="{{ tag.id }}" {% if request.GET.tag == tag.id|stringformat:"s" %}selected{% endif %}>
-                            {{ tag.name }}
-                        </option>
-                    {% endfor %}
-                </select>
-            </div>
+        /* Premium Animation */
+        @keyframes premium-glow {
+            0% { box-shadow: 0 0 5px rgba(255, 215, 0, 0.4); }
+            50% { box-shadow: 0 0 20px rgba(255, 215, 0, 0.8); }
+            100% { box-shadow: 0 0 5px rgba(255, 215, 0, 0.4); }
+        }
+        .premium-animated {
+            animation: premium-glow 2s infinite alternate;
+        }
+    </style>
+</head>
+<body class="bg-gray-100 dark:bg-gray-900 text-gray-900 dark:text-gray-100 min-h-screen">
 
-            <!-- Priority Filter -->
-            <div>
-                <label class="block text-sm font-medium mb-1 flex items-center">
-                    <i class="fas fa-exclamation-circle mr-2 text-gray-500"></i>
-                    Priority
-                </label>
-                <select name="priority" class="w-full p-2 border rounded dark:bg-gray-700 dark:border-gray-600">
-                    <option value="">All Priorities</option>
-                    {% for priority in priority_choices %}
-                        <option value="{{ priority.0 }}" {% if request.GET.priority == priority.0 %}selected{% endif %}>
-                            {{ priority.1 }}
-                        </option>
-                    {% endfor %}
-                </select>
-            </div>
-
-            <!-- Search -->
-            <div>
-                <label class="block text-sm font-medium mb-1 flex items-center">
-                    <i class="fas fa-search mr-2 text-gray-500"></i>
-                    Search
-                </label>
-                <input type="text" name="search" value="{{ request.GET.search }}" 
-                       class="w-full p-2 border rounded dark:bg-gray-700 dark:border-gray-600" 
-                       placeholder="Search tasks...">
-            </div>
-
-            <!-- Filter Buttons -->
-            <button type="submit" class="w-full bg-blue-600 text-white py-2 px-4 rounded hover:bg-blue-700 flex items-center justify-center">
-                <i class="fas fa-check-circle mr-2"></i>
-                Apply Filters
-            </button>
-            <a href="{% url 'task_list' %}" class="block text-center text-blue-600 dark:text-blue-400 hover:underline">
-                <i class="fas fa-sync-alt mr-1"></i>
-                Reset Filters
-            </a>
-        </form>
+    <div class="md:hidden p-4">
+        <button id="sidebarToggle" class="text-gray-600 dark:text-gray-300 focus:outline-none">
+            <i class="fas fa-bars text-2xl"></i>
+        </button>
     </div>
-    
-    <!-- Quick Actions Section -->
-    <div class="mb-6">
-        <h2 class="text-xl font-bold mb-4 flex items-center">
-            <i class="fas fa-bolt mr-2 text-yellow-500"></i>
-            Quick Actions
-        </h2>
-        <div class="space-y-2">
-            <!-- New Task -->
-            <a href="{% url 'task_create' %}" 
-               class="block w-full bg-green-600 text-white py-2 px-4 rounded hover:bg-green-700 text-center flex items-center justify-center">
-                <i class="fas fa-plus mr-2"></i>
-                New Task
-            </a>
 
-            <!-- New Category -->
-            <a href="{% url 'category_create' %}" 
-               class="block w-full bg-purple-600 text-white py-2 px-4 rounded hover:bg-purple-700 text-center flex items-center justify-center">
-                <i class="fas fa-tag mr-2"></i>
-                New Category
-            </a>
+    <div id="sidebar" class="fixed inset-y-0 left-0 bg-white dark:bg-gray-800 w-64 md:w-1/4 lg:w-1/5 shadow-lg 
+                                sidebar-transition sidebar-hide md:sidebar-show md:relative md:shadow-none 
+                                z-50 overflow-y-auto h-full">
+        
+        <div class="p-4">
+            <div class="mb-6 text-center">
+                <div class="flex items-center justify-center mb-2">
+                    <i class="fas fa-crown text-yellow-500 text-3xl premium-animated mr-2"></i>
+                    <h1 class="text-2xl font-bold">Premium User</h1>
+                </div>
+                <p class="text-sm text-gray-500 dark:text-gray-400">Unlock exclusive features!</p>
+            </div>
 
-            <!-- New Tag -->
-            <a href="{% url 'tag_create' %}" 
-               class="block w-full bg-indigo-600 text-white py-2 px-4 rounded hover:bg-indigo-700 text-center flex items-center justify-center">
-                <i class="fas fa-hashtag mr-2"></i>
-                New Tag
-            </a>
+            <div class="mb-6">
+                <h2 class="text-xl font-bold mb-4 flex items-center">
+                    <i class="fas fa-filter mr-2 text-blue-500"></i>
+                    Filters
+                </h2>
+                <form method="get" class="space-y-4">
+                    <div>
+                        <label class="block text-sm font-medium mb-1 flex items-center">
+                            <i class="fas fa-tag mr-2 text-gray-500"></i>
+                            Category
+                        </label>
+                        <select name="category" class="w-full p-2 border rounded dark:bg-gray-700 dark:border-gray-600">
+                            <option value="">All Categories</option>
+                            {% for category in categories %}
+                                <option value="{{ category.id }}" {% if request.GET.category == category.id|stringformat:"s" %}selected{% endif %}>
+                                    {{ category.name }}
+                                </option>
+                            {% endfor %}
+                        </select>
+                    </div>
 
-            <!-- Share List -->
-            <a href="{% url 'shared_list_create' %}" 
-               class="block w-full bg-yellow-600 text-white py-2 px-4 rounded hover:bg-yellow-700 text-center flex items-center justify-center">
-                <i class="fas fa-share-alt mr-2"></i>
-                Share List
-            </a>
+                    <div>
+                        <label class="block text-sm font-medium mb-1 flex items-center">
+                            <i class="fas fa-hashtag mr-2 text-gray-500"></i>
+                            Tag
+                        </label>
+                        <select name="tag" class="w-full p-2 border rounded dark:bg-gray-700 dark:border-gray-600">
+                            <option value="">All Tags</option>
+                            {% for tag in tags %}
+                                <option value="{{ tag.id }}" {% if request.GET.tag == tag.id|stringformat:"s" %}selected{% endif %}>
+                                    {{ tag.name }}
+                                </option>
+                            {% endfor %}
+                        </select>
+                    </div>
+
+                    <div>
+                        <label class="block text-sm font-medium mb-1 flex items-center">
+                            <i class="fas fa-exclamation-circle mr-2 text-gray-500"></i>
+                            Priority
+                        </label>
+                        <select name="priority" class="w-full p-2 border rounded dark:bg-gray-700 dark:border-gray-600">
+                            <option value="">All Priorities</option>
+                            {% for priority in priority_choices %}
+                                <option value="{{ priority.0 }}" {% if request.GET.priority == priority.0 %}selected{% endif %}>
+                                    {{ priority.1 }}
+                                </option>
+                            {% endfor %}
+                        </select>
+                    </div>
+
+                    <div>
+                        <label class="block text-sm font-medium mb-1 flex items-center">
+                            <i class="fas fa-search mr-2 text-gray-500"></i>
+                            Search
+                        </label>
+                        <input type="text" name="search" value="{{ request.GET.search }}" 
+                               class="w-full p-2 border rounded dark:bg-gray-700 dark:border-gray-600" 
+                               placeholder="Search tasks...">
+                    </div>
+
+                    <button type="submit" class="w-full bg-blue-600 text-white py-2 px-4 rounded hover:bg-blue-700 flex items-center justify-center">
+                        <i class="fas fa-check-circle mr-2"></i>
+                        Apply Filters
+                    </button>
+                    <a href="{% url 'task_list' %}" class="block text-center text-blue-600 dark:text-blue-400 hover:underline">
+                        <i class="fas fa-sync-alt mr-1"></i>
+                        Reset Filters
+                    </a>
+                </form>
+            </div>
+            
+            <div class="mb-6">
+                <h2 class="text-xl font-bold mb-4 flex items-center">
+                    <i class="fas fa-bolt mr-2 text-yellow-500"></i>
+                    Quick Actions
+                </h2>
+                <div class="space-y-2">
+                    <a href="{% url 'task_create' %}" 
+                       class="block w-full bg-green-600 text-white py-2 px-4 rounded hover:bg-green-700 text-center flex items-center justify-center">
+                        <i class="fas fa-plus mr-2"></i>
+                        New Task
+                    </a>
+
+                    <a href="{% url 'category_create' %}" 
+                       class="block w-full bg-purple-600 text-white py-2 px-4 rounded hover:bg-purple-700 text-center flex items-center justify-center">
+                        <i class="fas fa-tag mr-2"></i>
+                        New Category
+                    </a>
+
+                    <a href="{% url 'tag_create' %}" 
+                       class="block w-full bg-indigo-600 text-white py-2 px-4 rounded hover:bg-indigo-700 text-center flex items-center justify-center">
+                        <i class="fas fa-hashtag mr-2"></i>
+                        New Tag
+                    </a>
+
+                    <a href="{% url 'shared_list_create' %}" 
+                       class="block w-full bg-yellow-600 text-white py-2 px-4 rounded hover:bg-yellow-700 text-center flex items-center justify-center">
+                        <i class="fas fa-share-alt mr-2"></i>
+                        Share List
+                    </a>
+                </div>
+            </div>
+            
+            <div>
+                <h2 class="text-xl font-bold mb-4 flex items-center">
+                    <i class="fas fa-users mr-2 text-green-500"></i>
+                    Shared Lists
+                </h2>
+                {% if shared_lists %}
+                    <ul class="space-y-2 max-h-60 overflow-y-auto pr-2">
+                        {% for shared_list in shared_lists %}
+                            <li>
+                                <a href="{% url 'shared_list_detail' shared_list.id %}" 
+                                   class="flex items-center p-2 rounded hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors">
+                                    <i class="fas fa-users mr-2 text-blue-500"></i>
+                                    <span class="truncate">{{ shared_list.title }}</span>
+                                    {% if shared_list.owner == request.user %}
+                                        <span class="ml-auto text-xs bg-blue-100 dark:bg-blue-900 text-blue-800 dark:text-blue-200 px-2 py-1 rounded-full">Owner</span>
+                                    {% else %}
+                                        <span class="ml-auto text-xs bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-gray-200 px-2 py-1 rounded-full">Member</span>
+                                    {% endif %}
+                                </a>
+                            </li>
+                        {% endfor %}
+                    </ul>
+                {% else %}
+                    <div class="text-center py-4 text-gray-500 dark:text-gray-400">
+                        <i class="fas fa-users-slash text-2xl mb-2"></i>
+                        <p>No shared lists</p>
+                    </div>
+                {% endif %}
+            </div>
         </div>
     </div>
-    
-    <!-- Shared Lists Section -->
-    <div>
-        <h2 class="text-xl font-bold mb-4 flex items-center">
-            <i class="fas fa-users mr-2 text-green-500"></i>
-            Shared Lists
-        </h2>
-        {% if shared_lists %}
-            <ul class="space-y-2 max-h-60 overflow-y-auto pr-2">
-                {% for shared_list in shared_lists %}
-                    <li>
-                        <a href="{% url 'shared_list_detail' shared_list.id %}" 
-                           class="flex items-center p-2 rounded hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors">
-                            <i class="fas fa-users mr-2 text-blue-500"></i>
-                            <span class="truncate">{{ shared_list.title }}</span>
-                            {% if shared_list.owner == request.user %}
-                                <span class="ml-auto text-xs bg-blue-100 dark:bg-blue-900 text-blue-800 dark:text-blue-200 px-2 py-1 rounded-full">Owner</span>
-                            {% else %}
-                                <span class="ml-auto text-xs bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-gray-200 px-2 py-1 rounded-full">Member</span>
-                            {% endif %}
-                        </a>
-                    </li>
-                {% endfor %}
-            </ul>
-        {% else %}
-            <div class="text-center py-4 text-gray-500 dark:text-gray-400">
-                <i class="fas fa-users-slash text-2xl mb-2"></i>
-                <p>No shared lists</p>
-            </div>
-        {% endif %}
-    </div>
-</div>
 
+    <script>
+        const sidebarToggle = document.getElementById('sidebarToggle');
+        const sidebar = document.getElementById('sidebar');
+
+        // Function to toggle sidebar visibility
+        function toggleSidebar() {
+            sidebar.classList.toggle('sidebar-hide');
+            sidebar.classList.toggle('sidebar-show');
+        }
+
+        // Event listener for the toggle button
+        sidebarToggle.addEventListener('click', toggleSidebar);
+
+        // Close sidebar when clicking outside on mobile (optional, but good for UX)
+        // You'd typically need a main content area to click on. For simplicity,
+        // we'll assume a click anywhere outside the sidebar on mobile closes it.
+        // This is more complex with fixed positioning and overlays, but here's a basic idea:
+        document.addEventListener('click', function(event) {
+            // Check if the screen is small (mobile) AND the sidebar is currently open AND the click is outside the sidebar and the toggle button
+            if (window.innerWidth < 768 && 
+                sidebar.classList.contains('sidebar-show') && 
+                !sidebar.contains(event.target) && 
+                !sidebarToggle.contains(event.target)) {
+                toggleSidebar();
+            }
+        });
+
+        // Ensure sidebar is visible on larger screens by default
+        function handleResize() {
+            if (window.innerWidth >= 768) { // Tailwind's 'md' breakpoint
+                sidebar.classList.remove('sidebar-hide');
+                sidebar.classList.add('sidebar-show');
+                sidebar.classList.remove('fixed', 'inset-y-0', 'left-0', 'w-64', 'shadow-lg', 'z-50', 'h-full');
+                sidebar.classList.add('relative', 'shadow-none'); // Apply desktop styles
+            } else {
+                sidebar.classList.add('fixed', 'inset-y-0', 'left-0', 'w-64', 'shadow-lg', 'z-50', 'h-full');
+                sidebar.classList.remove('relative', 'shadow-none'); // Apply mobile styles
+                // Keep the sidebar hidden on mobile load unless specifically opened
+                if (!sidebar.classList.contains('sidebar-show')) {
+                    sidebar.classList.add('sidebar-hide');
+                }
+            }
+        }
+
+        // Initial check and event listener for window resize
+        handleResize();
+        window.addEventListener('resize', handleResize);
+
+    </script>
+</body>
+</html>
 
 
 

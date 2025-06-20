@@ -1,54 +1,619 @@
-<!-- Created by Rejone Hossen -->
 {% extends "base.html" %}
 {% load static %}
 
 {% block content %}
+<!-- Background Animation Elements -->
+<div class="bg-animation">
+  <div class="circle circle-1"></div>
+  <div class="circle circle-2"></div>
+  <div class="circle circle-3"></div>
+  <div class="circle circle-4"></div>
+</div>
+
 <div class="form-container animate-fade-in">
   <div class="form-card animate-slide-up">
-    <h2 class="form-title">{% if object %}Edit{% else %}Create{% endif %} Tag</h2>
+    <!-- Header with animated icon -->
+    <div class="form-header">
+      <div class="icon-container pulse-animation">
+        <i class="fas fa-tags icon-animate"></i>
+      </div>
+      <h2 class="form-title">{% if object %}Edit{% else %}Create{% endif %} Tag</h2>
+      <p class="form-subtitle">Add metadata to organize your content</p>
+    </div>
     
-    <form method="post" class="premium-form">
+    <form method="POST" class="premium-form">
       {% csrf_token %}
       
+      <!-- Floating Label Input with Enhanced Animation -->
       <div class="form-group floating-label">
         {{ form.name }}
         <label for="{{ form.name.id_for_label }}">Tag Name</label>
         <div class="form-icon">
-          <i class="fas fa-hashtag"></i>
+          <i class="fas fa-hashtag icon-float"></i>
         </div>
+        <div class="input-highlight"></div>
       </div>
       
-      <button type="submit" class="btn-premium btn-gradient">
+      
+      
+      
+      <!-- Premium Submit Button with Ripple Effect -->
+      <button type="submit" class="btn-premium btn-gradient btn-ripple">
         <span class="btn-text">Save Tag</span>
         <span class="btn-icon">
           <i class="fas fa-check-circle"></i>
         </span>
+        <span class="btn-loader">
+          <i class="fas fa-circle-notch fa-spin"></i>
+        </span>
       </button>
+      
+      
+      
     </form>
   </div>
+  
+  <!-- Success Notification (Hidden by default) -->
+  <div class="success-notification">
+    <div class="notification-content">
+      <i class="fas fa-check-circle notification-icon"></i>
+      <span class="notification-text">Tag saved successfully!</span>
+    </div>
+  </div>
 </div>
+
+<style>
+/* ========== BASE STYLES ========== */
+:root {
+  --primary: #6e8efb;
+  --primary-light: #8fa5fc;
+  --secondary: #a777e3;
+  --dark: #0f141e;
+  --light: #ffffff;
+  --success: #4ade80;
+  --error: #f87171;
+  --gray-100: #f3f4f6;
+  --gray-800: #1f2937;
+}
+
+body {
+  font-family: 'Poppins', sans-serif;
+  background-color: #f8fafc;
+  color: var(--dark);
+  min-height: 100vh;
+  overflow-x: hidden;
+  position: relative;
+}
+
+/* ========== BACKGROUND ANIMATION ========== */
+.bg-animation {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: -1;
+  overflow: hidden;
+}
+
+.circle {
+  position: absolute;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(110,142,251,0.1) 0%, transparent 70%);
+  animation: float 15s infinite linear;
+}
+
+.circle-1 {
+  width: 300px;
+  height: 300px;
+  top: -50px;
+  left: -50px;
+  animation-delay: 0s;
+}
+
+.circle-2 {
+  width: 500px;
+  height: 500px;
+  bottom: -100px;
+  right: -100px;
+  animation-delay: 2s;
+  animation-duration: 20s;
+}
+
+.circle-3 {
+  width: 200px;
+  height: 200px;
+  top: 30%;
+  right: 10%;
+  animation-delay: 4s;
+  animation-duration: 12s;
+}
+
+.circle-4 {
+  width: 400px;
+  height: 400px;
+  bottom: 20%;
+  left: 10%;
+  animation-delay: 1s;
+  animation-duration: 25s;
+}
+
+@keyframes float {
+  0% {
+    transform: translateY(0) rotate(0deg);
+  }
+  50% {
+    transform: translateY(-20px) rotate(180deg);
+  }
+  100% {
+    transform: translateY(0) rotate(360deg);
+  }
+}
+
+/* ========== FORM CONTAINER ========== */
+.form-container {
+  max-width: 500px;
+  margin: 2rem auto;
+  padding: 1rem;
+  perspective: 1000px;
+}
+
+.form-card {
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(10px);
+  border-radius: 20px;
+  padding: 2.5rem;
+  box-shadow: 0 15px 50px rgba(0, 0, 0, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  transform-style: preserve-3d;
+  transition: all 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+  position: relative;
+  overflow: hidden;
+}
+
+.form-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 5px;
+  background: linear-gradient(90deg, var(--primary), var(--secondary));
+}
+
+/* ========== FORM HEADER ========== */
+.form-header {
+  text-align: center;
+  margin-bottom: 2.5rem;
+}
+
+.icon-container {
+  width: 80px;
+  height: 80px;
+  margin: 0 auto 1.5rem;
+  background: linear-gradient(135deg, var(--primary), var(--secondary));
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 10px 30px rgba(110, 142, 251, 0.4);
+}
+
+.icon-animate {
+  font-size: 2.5rem;
+  color: white;
+  animation: bounce 2s infinite;
+}
+
+@keyframes bounce {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+.pulse-animation {
+  animation: pulse 3s infinite;
+}
+
+@keyframes pulse {
+  0% {
+    box-shadow: 0 0 0 0 rgba(110, 142, 251, 0.7);
+  }
+  70% {
+    box-shadow: 0 0 0 15px rgba(110, 142, 251, 0);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(110, 142, 251, 0);
+  }
+}
+
+.form-title {
+  color: var(--dark);
+  font-size: 2rem;
+  font-weight: 700;
+  margin-bottom: 0.5rem;
+  background: linear-gradient(135deg, var(--primary), var(--secondary));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.form-subtitle {
+  color: var(--gray-800);
+  font-size: 0.95rem;
+  opacity: 0.8;
+}
+
+/* ========== FORM GROUPS ========== */
+.form-group {
+  position: relative;
+  margin-bottom: 2rem;
+}
+
+/* ========== FLOATING LABEL INPUT ========== */
+.floating-label {
+  position: relative;
+}
+
+.floating-label input {
+  width: 100%;
+  padding: 1.2rem 1.2rem 1.2rem 3.5rem;
+  font-size: 1rem;
+  border: 2px solid rgba(110, 142, 251, 0.2);
+  border-radius: 12px;
+  background: rgba(241, 245, 249, 0.8);
+  color: var(--dark);
+  transition: all 0.3s ease;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+}
+
+.floating-label input:focus {
+  border-color: var(--primary-light);
+  box-shadow: 0 0 0 4px rgba(110, 142, 251, 0.2);
+  outline: none;
+  background: white;
+}
+
+.floating-label label {
+  position: absolute;
+  top: 1.2rem;
+  left: 3.5rem;
+  color: var(--gray-800);
+  opacity: 0.7;
+  transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+  pointer-events: none;
+  font-weight: 500;
+}
+
+.floating-label input:focus + label,
+.floating-label input:not(:placeholder-shown) + label {
+  top: -0.6rem;
+  left: 1.2rem;
+  font-size: 0.85rem;
+  background: white;
+  padding: 0 0.5rem;
+  color: var(--primary);
+  opacity: 1;
+}
+
+.form-icon {
+  position: absolute;
+  left: 1.2rem;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 1.2rem;
+  color: var(--primary);
+  transition: all 0.3s ease;
+}
+
+.icon-float {
+  animation: floatIcon 3s infinite ease-in-out;
+}
+
+@keyframes floatIcon {
+  0%, 100% {
+    transform: translateY(-50%) rotate(0deg);
+  }
+  50% {
+    transform: translateY(-50%) rotate(10deg);
+  }
+}
+
+.input-highlight {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 0;
+  height: 2px;
+  background: linear-gradient(90deg, var(--primary), var(--secondary));
+  transition: width 0.3s ease;
+}
+
+.floating-label input:focus ~ .input-highlight {
+  width: 100%;
+}
+
+/* ========== COLOR PICKER ========== */
+.color-picker-container {
+  position: relative;
+  margin-top: 2.5rem;
+}
+
+.color-input {
+  position: absolute;
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.color-preview {
+  width: 60px;
+  height: 60px;
+  border-radius: 16px;
+  background: var(--primary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.color-preview:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+}
+
+.color-preview-inner {
+  width: 50px;
+  height: 50px;
+  border-radius: 12px;
+  background: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--primary);
+  font-size: 1.2rem;
+}
+
+.color-tooltip {
+  position: absolute;
+  top: 50%;
+  left: 80px;
+  transform: translateY(-50%);
+  background: white;
+  padding: 0.5rem 1rem;
+  border-radius: 8px;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+  font-size: 0.9rem;
+  opacity: 0;
+  pointer-events: none;
+  transition: all 0.3s ease;
+}
+
+.color-preview:hover ~ .color-tooltip {
+  opacity: 1;
+  left: 90px;
+}
+
+/* ========== BUTTON STYLES ========== */
+.btn-premium {
+  background: linear-gradient(135deg, var(--primary), var(--secondary));
+  background-size: 200% auto;
+  border: none;
+  color: white;
+  padding: 1.2rem 2.5rem;
+  border-radius: 12px;
+  font-weight: 600;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
+  box-shadow: 0 6px 20px rgba(106, 120, 251, 0.4);
+  position: relative;
+  overflow: hidden;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  margin-top: 1rem;
+}
+
+.btn-premium:hover {
+  background-position: right center;
+  box-shadow: 0 10px 30px rgba(106, 120, 251, 0.6);
+  transform: translateY(-3px);
+}
+
+.btn-premium:active {
+  transform: translateY(1px);
+}
+
+.btn-text {
+  position: relative;
+  z-index: 2;
+}
+
+.btn-icon {
+  margin-left: 0.5rem;
+  font-size: 1.2rem;
+  position: relative;
+  z-index: 2;
+}
+
+.btn-loader {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  opacity: 0;
+  transition: all 0.3s ease;
+}
+
+.btn-ripple {
+  overflow: hidden;
+}
+
+.btn-ripple::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 5px;
+  height: 5px;
+  background: rgba(255, 255, 255, 0.5);
+  opacity: 0;
+  border-radius: 100%;
+  transform: scale(1, 1) translate(-50%, -50%);
+  transform-origin: 50% 50%;
+}
+
+.btn-ripple:focus:not(:active)::after {
+  animation: ripple 1s ease-out;
+}
+
+@keyframes ripple {
+  0% {
+    transform: scale(0, 0);
+    opacity: 0.5;
+  }
+  100% {
+    transform: scale(20, 20);
+    opacity: 0;
+  }
+}
+
+/* ========== FORM FOOTER ========== */
+.form-footer {
+  display: flex;
+  justify-content: center;
+  gap: 1.5rem;
+  margin-top: 2rem;
+}
+
+.form-link {
+  color: var(--gray-800);
+  text-decoration: none;
+  font-size: 0.9rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  transition: all 0.3s ease;
+}
+
+.form-link i {
+  font-size: 1rem;
+}
+
+.hover-underline {
+  position: relative;
+}
+
+.hover-underline::after {
+  content: '';
+  position: absolute;
+  bottom: -2px;
+  left: 0;
+  width: 0;
+  height: 1px;
+  background: var(--primary);
+  transition: width 0.3s ease;
+}
+
+.hover-underline:hover::after {
+  width: 100%;
+}
+
+/* ========== SUCCESS NOTIFICATION ========== */
+.success-notification {
+  position: fixed;
+  bottom: -100px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: var(--success);
+  color: white;
+  padding: 1rem 2rem;
+  border-radius: 12px;
+  box-shadow: 0 10px 30px rgba(74, 222, 128, 0.4);
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  z-index: 1000;
+  opacity: 0;
+  transition: all 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+}
+
+.success-notification.show {
+  bottom: 2rem;
+  opacity: 1;
+}
+
+.notification-icon {
+  font-size: 1.5rem;
+}
+
+.notification-text {
+  font-weight: 500;
+}
+
+/* ========== ANIMATIONS ========== */
+.animate-fade-in {
+  animation: fadeIn 0.8s ease-out forwards;
+}
+
+.animate-slide-up {
+  animation: slideUp 0.8s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ========== RESPONSIVE ADJUSTMENTS ========== */
+@media (max-width: 768px) {
+  .form-container {
+    padding: 1rem;
+  }
+  
+  .form-card {
+    padding: 2rem;
+  }
+  
+  .form-title {
+    font-size: 1.8rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .form-card {
+    padding: 1.5rem;
+  }
+  
+  .form-footer {
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+}
+</style>
+
 {% endblock %}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
