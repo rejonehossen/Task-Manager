@@ -5,9 +5,73 @@
 {% block title %}Task List{% endblock %}
 
 {% block content %}
+<div class="cube-filter-section">
+            <div class="cube-filter-title">
+                <i class="fas fa-filter"></i>
+                Filter Tasks
+            </div>
+            
+            <form method="get" class="space-y-4">
+                <!-- Category Filter -->
+                <div class="cube-filter-group">
+                    <label class="cube-filter-label">Category</label>
+                    <select name="category" class="cube-filter-input">
+                        <option value="">All Categories</option>
+                        {% for category in categories %}
+                            <option value="{{ category.id }}" {% if request.GET.category == category.id|stringformat:"s" %}selected{% endif %}>
+                                {{ category.name }}
+                            </option>
+                        {% endfor %}
+                    </select>
+                </div>
+                
+                <!-- Priority Filter -->
+                <div class="cube-filter-group">
+                    <label class="cube-filter-label">Priority</label>
+                    <select name="priority" class="cube-filter-input">
+                        <option value="">All Priorities</option>
+                        {% for priority in priority_choices %}
+                            <option value="{{ priority.0 }}" {% if request.GET.priority == priority.0 %}selected{% endif %}>
+                                {{ priority.1 }}
+                            </option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <!-- Tag Filter -->
+                <div class="cube-filter-group">
+                    <label class="cube-filter-label">Tag</label>
+                    <select name="tag" class="cube-filter-input">
+                        <option value="">All Tags</option>
+                        {% for tag in tags %}
+                            <option value="{{ tag.id }}" {% if request.GET.tag == tag.id %}selected{% endif %}>
+                                {{ tag.name }}
+                            </option>
+                        {% endfor %}
+                    </select>
+                </div>
+                
+                <!-- Search Filter -->
+                <div class="cube-filter-group">
+                    <label class="cube-filter-label">Search</label>
+                    <input type="text" name="search" value="{{ request.GET.search }}" 
+                           class="cube-filter-input" 
+                           placeholder="Search tasks...">
+                </div>
+                
+                <!-- Submit Button -->
+                <button type="submit" class="cube-filter-btn">
+                    <i class="fas fa-check-circle"></i>
+                    Apply Filters
+                </button>
+                
+                <!-- Reset Link -->
+                <a href="{% url 'task_list' %}" class="cube-filter-reset">
+                    <i class="fas fa-sync-alt mr-1"></i>
+                    Reset Filters
+                </a>
+            </form>
+        </div>
 <div class="flex flex-col md:flex-row gap-6">
-    <!-- Sidebar -->
-    {% include 'tasks/partials/_sidebar.html' %}
     
 
     <!-- Main Content -->

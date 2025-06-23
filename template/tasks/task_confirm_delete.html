@@ -1,0 +1,559 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
+<!-- Premium Background Animation -->
+<div class="premium-delete-bg">
+  <div class="bg-particle p1"></div>
+  <div class="bg-particle p2"></div>
+  <div class="bg-particle p3"></div>
+  <div class="bg-particle p4"></div>
+</div>
+
+<!-- Main Container -->
+<div class="premium-delete-container">
+  <!-- Confirmation Card -->
+  <div class="premium-delete-card">
+    <!-- Warning Icon -->
+    <div class="warning-icon">
+      <div class="warning-circle">
+        <i class="fas fa-exclamation-triangle"></i>
+      </div>
+    </div>
+    
+    <!-- Title and Message -->
+    <h1 class="premium-delete-title">Confirm Deletion</h1>
+    <p class="premium-delete-message">Are you sure you want to delete <span class="task-name">"{{ task.title }}"</span>?</p>
+    <p class="premium-delete-warning">This action cannot be undone.</p>
+    
+    <!-- Form Buttons -->
+    <form method="POST" class="premium-delete-form">
+      {% csrf_token %}
+      <div class="button-group">
+        <button type="submit" class="btn-delete">
+          <span class="btn-text">Delete Forever</span>
+          <span class="btn-icon">
+            <i class="fas fa-trash-alt"></i>
+          </span>
+          <span class="btn-pulse"></span>
+        </button>
+        
+        <a href="{% url 'task_list' %}" class="btn-cancel">
+          <span class="btn-text">Cancel</span>
+          <span class="btn-icon">
+            <i class="fas fa-times"></i>
+          </span>
+        </a>
+      </div>
+    </form>
+  </div>
+  
+  <!-- Deletion Animation (Hidden) -->
+  <div class="deletion-animation">
+    <div class="shredder">
+      <div class="shredder-top"></div>
+      <div class="shredder-teeth"></div>
+      <div class="shredder-paper">
+        <div class="paper-content">
+          <i class="fas fa-tasks"></i>
+          <span>{{ object.title }}</span>
+        </div>
+      </div>
+    </div>
+    <div class="confetti-container"></div>
+  </div>
+</div>
+
+<style>
+/* ========== BASE VARIABLES ========== */
+:root {
+  --primary: #ff4757;
+  --primary-light: #ff6b81;
+  --primary-dark: #e84118;
+  --secondary: #576574;
+  --dark: #2f3542;
+  --light: #ffffff;
+  --gray-light: #f1f2f6;
+  --gray-dark: #747d8c;
+  --warning: #ffa502;
+}
+
+/* ========== BACKGROUND ANIMATION ========== */
+.premium-delete-bg {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: -1;
+  overflow: hidden;
+  background: linear-gradient(135deg, #f5f6fa 0%, #dfe4ea 100%);
+}
+
+.bg-particle {
+  position: absolute;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(255, 71, 87, 0.1) 0%, transparent 70%);
+  filter: blur(20px);
+  animation: float 15s infinite linear;
+}
+
+.p1 {
+  width: 300px;
+  height: 300px;
+  top: -50px;
+  left: -50px;
+  animation-delay: 0s;
+}
+
+.p2 {
+  width: 500px;
+  height: 500px;
+  bottom: -100px;
+  right: -100px;
+  animation-delay: 3s;
+}
+
+.p3 {
+  width: 200px;
+  height: 200px;
+  top: 30%;
+  right: 10%;
+  animation-delay: 5s;
+}
+
+.p4 {
+  width: 400px;
+  height: 400px;
+  bottom: 20%;
+  left: 10%;
+  animation-delay: 7s;
+}
+
+@keyframes float {
+  0% {
+    transform: translate(0, 0) rotate(0deg);
+  }
+  50% {
+    transform: translate(20px, 20px) rotate(180deg);
+  }
+  100% {
+    transform: translate(0, 0) rotate(360deg);
+  }
+}
+
+/* ========== MAIN CONTAINER ========== */
+.premium-delete-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  padding: 2rem;
+}
+
+/* ========== CONFIRMATION CARD ========== */
+.premium-delete-card {
+  background: rgba(255, 255, 255, 0.97);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border-radius: 20px;
+  width: 100%;
+  max-width: 500px;
+  padding: 3rem;
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  text-align: center;
+  transform: perspective(1000px);
+  transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  animation: cardEntrance 0.8s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+  position: relative;
+  overflow: hidden;
+}
+
+.premium-delete-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 6px;
+  background: linear-gradient(90deg, var(--primary), var(--primary-light));
+}
+
+@keyframes cardEntrance {
+  from {
+    opacity: 0;
+    transform: perspective(1000px) rotateX(10deg) translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: perspective(1000px) rotateX(0) translateY(0);
+  }
+}
+
+/* ========== WARNING ICON ========== */
+.warning-icon {
+  margin-bottom: 2rem;
+}
+
+.warning-circle {
+  width: 100px;
+  height: 100px;
+  margin: 0 auto;
+  background: linear-gradient(135deg, var(--primary), var(--primary-light));
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 15px 35px rgba(255, 71, 87, 0.3);
+  position: relative;
+  animation: pulseWarning 2s infinite;
+}
+
+.warning-circle i {
+  font-size: 3rem;
+  color: white;
+  animation: shake 1.5s infinite;
+}
+
+@keyframes pulseWarning {
+  0% {
+    box-shadow: 0 0 0 0 rgba(255, 71, 87, 0.7);
+  }
+  70% {
+    box-shadow: 0 0 0 15px rgba(255, 71, 87, 0);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(255, 71, 87, 0);
+  }
+}
+
+@keyframes shake {
+  0%, 100% {
+    transform: rotate(0deg);
+  }
+  10%, 30%, 50%, 70%, 90% {
+    transform: rotate(-5deg);
+  }
+  20%, 40%, 60%, 80% {
+    transform: rotate(5deg);
+  }
+}
+
+/* ========== TEXT CONTENT ========== */
+.premium-delete-title {
+  font-size: 2rem;
+  font-weight: 700;
+  margin-bottom: 1rem;
+  color: var(--dark);
+}
+
+.premium-delete-message {
+  font-size: 1.1rem;
+  color: var(--gray-dark);
+  margin-bottom: 1.5rem;
+  line-height: 1.6;
+}
+
+.task-name {
+  font-weight: 600;
+  color: var(--primary);
+  background: rgba(255, 71, 87, 0.1);
+  padding: 0.2rem 0.5rem;
+  border-radius: 6px;
+}
+
+.premium-delete-warning {
+  font-size: 0.9rem;
+  color: var(--warning);
+  font-weight: 600;
+  margin-bottom: 2.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+}
+
+.premium-delete-warning::before {
+  content: '!';
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 20px;
+  height: 20px;
+  background: var(--warning);
+  color: white;
+  border-radius: 50%;
+  font-size: 0.8rem;
+  font-weight: 700;
+}
+
+/* ========== BUTTONS ========== */
+.button-group {
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+}
+
+.btn-delete, .btn-cancel {
+  padding: 1rem 2rem;
+  border-radius: 10px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+  display: inline-flex;
+  align-items: center;
+  gap: 0.7rem;
+  position: relative;
+  overflow: hidden;
+  border: none;
+}
+
+.btn-delete {
+  background: linear-gradient(135deg, var(--primary), var(--primary-light));
+  color: white;
+  box-shadow: 0 10px 25px rgba(255, 71, 87, 0.3);
+}
+
+.btn-delete:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 15px 30px rgba(255, 71, 87, 0.4);
+}
+
+.btn-delete:active {
+  transform: translateY(1px);
+}
+
+.btn-cancel {
+  background: rgba(87, 101, 116, 0.1);
+  color: var(--secondary);
+  border: 1px solid rgba(87, 101, 116, 0.2);
+}
+
+.btn-cancel:hover {
+  background: rgba(87, 101, 116, 0.2);
+  transform: translateY(-3px);
+}
+
+.btn-cancel:active {
+  transform: translateY(1px);
+}
+
+.btn-pulse {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(255, 255, 255, 0.2);
+  transform: scale(0);
+  border-radius: 50%;
+  opacity: 0;
+  animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+  0% {
+    transform: scale(0);
+    opacity: 0;
+  }
+  50% {
+    opacity: 0.5;
+  }
+  100% {
+    transform: scale(3);
+    opacity: 0;
+  }
+}
+
+/* ========== DELETION ANIMATION ========== */
+.deletion-animation {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.8);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.5s ease;
+}
+
+.deletion-animation.active {
+  opacity: 1;
+  pointer-events: all;
+}
+
+.shredder {
+  width: 300px;
+  height: 200px;
+  position: relative;
+  margin-bottom: 3rem;
+}
+
+.shredder-top {
+  width: 100%;
+  height: 20px;
+  background: #576574;
+  border-radius: 5px 5px 0 0;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+}
+
+.shredder-teeth {
+  width: 100%;
+  height: 10px;
+  background: repeating-linear-gradient(
+    90deg,
+    #2f3542,
+    #2f3542 10px,
+    #576574 10px,
+    #576574 20px
+  );
+  position: relative;
+  z-index: 2;
+}
+
+.shredder-paper {
+  width: 80%;
+  height: 100px;
+  background: white;
+  margin: 0 auto;
+  padding: 1rem;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+  position: relative;
+  top: -5px;
+  animation: shred 2s forwards;
+  transform-origin: top;
+}
+
+.paper-content {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: var(--dark);
+  font-weight: 600;
+}
+
+.paper-content i {
+  color: var(--primary);
+}
+
+.confetti-container {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  z-index: -1;
+}
+
+.confetti {
+  position: absolute;
+  width: 10px;
+  height: 10px;
+  background: var(--primary);
+  opacity: 0;
+  animation: confettiFall 3s forwards;
+}
+
+@keyframes shred {
+  0% {
+    transform: translateY(0) scaleY(1);
+  }
+  50% {
+    transform: translateY(50px) scaleY(0.8);
+  }
+  100% {
+    transform: translateY(100px) scaleY(0);
+    opacity: 0;
+  }
+}
+
+@keyframes confettiFall {
+  0% {
+    transform: translateY(-100px) rotate(0deg);
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(100vh) rotate(360deg);
+    opacity: 0;
+  }
+}
+
+/* ========== RESPONSIVE ADJUSTMENTS ========== */
+@media (max-width: 768px) {
+  .premium-delete-container {
+    padding: 1.5rem;
+  }
+  
+  .premium-delete-card {
+    padding: 2.5rem;
+  }
+  
+  .button-group {
+    flex-direction: column;
+  }
+  
+  .btn-delete, .btn-cancel {
+    width: 100%;
+    justify-content: center;
+  }
+}
+
+@media (max-width: 480px) {
+  .premium-delete-card {
+    padding: 2rem 1.5rem;
+  }
+  
+  .premium-delete-title {
+    font-size: 1.6rem;
+  }
+  
+  .warning-circle {
+    width: 80px;
+    height: 80px;
+  }
+}
+</style>
+
+<script>
+// Form submission with animation
+document.querySelector('.premium-delete-form').addEventListener('submit', function(e) {
+  e.preventDefault();
+  
+  // Show deletion animation
+  const animation = document.querySelector('.deletion-animation');
+  animation.classList.add('active');
+  
+  // Create confetti
+  createConfetti();
+  
+  // Submit form after animation
+  setTimeout(() => {
+    this.submit();
+  }, 2000);
+});
+
+function createConfetti() {
+  const container = document.querySelector('.confetti-container');
+  const colors = ['#ff4757', '#ff6b81', '#ff6348', '#ff7f50', '#ffa502'];
+  
+  for (let i = 0; i < 50; i++) {
+    const confetti = document.createElement('div');
+    confetti.classList.add('confetti');
+    confetti.style.left = Math.random() * 100 + 'vw';
+    confetti.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+    confetti.style.width = Math.random() * 10 + 5 + 'px';
+    confetti.style.height = Math.random() * 10 + 5 + 'px';
+    confetti.style.animationDelay = Math.random() * 2 + 's';
+    container.appendChild(confetti);
+  }
+}
+</script>
+
+{% endblock %}

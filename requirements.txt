@@ -1,0 +1,8 @@
+asgiref==3.8.1
+Django==5.2.3
+django-crispy-forms==2.4
+django-humanize==0.1.2
+humanize==4.12.3
+pillow==11.2.1
+sqlparse==0.5.3
+tzdata==2025.2
